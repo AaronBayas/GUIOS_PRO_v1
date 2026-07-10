@@ -19,6 +19,7 @@ export default function EvaluacionWizardPage() {
   const [loading, setLoading] = useState(true)
   const [step, setStep] = useState(1)
   const [factorStates, setFactorStates] = useState<Record<number, { id: number; alcance?: string }>>({})
+  const [factorEvaluatedStates, setFactorEvaluatedStates] = useState<Record<number, boolean>>({})
   const [subfactorStates, setSubfactorStates] = useState<Record<number, Record<number, number>>>({})
   const [selectedFactor, setSelectedFactor] = useState<number | null>(null)
   const [saving, setSaving] = useState(false)
@@ -36,12 +37,14 @@ export default function EvaluacionWizardPage() {
 
       // Initialize states from saved data
       const fs: Record<number, { id: number; alcance?: string }> = {}
+      const fes: Record<number, boolean> = {}
       const ss: Record<number, Record<number, number>> = {}
       ev.evaluacion_factores.forEach((ef) => {
         fs[ef.factor_id] = {
           id: ef.importancia_decisor || ef.factor.importancia_sugerida,
           alcance: ef.alcance_override || undefined,
         }
+        fes[ef.factor_id] = ef.importancia_decisor !== null || ef.alcance_override !== null
         const subMap: Record<number, number> = {}
         ef.evaluacion_subfactores.forEach((esf) => {
           if (esf.peso !== null) subMap[esf.subfactor_id] = esf.peso
@@ -49,6 +52,7 @@ export default function EvaluacionWizardPage() {
         ss[ef.factor_id] = subMap
       })
       setFactorStates(fs)
+      setFactorEvaluatedStates(fes)
       setSubfactorStates(ss)
     }).finally(() => setLoading(false))
   }, [id])
@@ -102,11 +106,13 @@ export default function EvaluacionWizardPage() {
 
   const handleIDChange = (factorId: number, value: number) => {
     setFactorStates((prev) => ({ ...prev, [factorId]: { ...prev[factorId], id: value } }))
+    setFactorEvaluatedStates((prev) => ({ ...prev, [factorId]: true }))
     triggerAutosave()
   }
 
   const handleAlcanceChange = (factorId: number, alcance: string) => {
     setFactorStates((prev) => ({ ...prev, [factorId]: { ...prev[factorId], alcance } }))
+    setFactorEvaluatedStates((prev) => ({ ...prev, [factorId]: true }))
     triggerAutosave()
   }
 
@@ -173,6 +179,7 @@ export default function EvaluacionWizardPage() {
           <Step1ImportanciaFactores
             factores={factores}
             factorStates={factorStates}
+            factorEvaluatedStates={factorEvaluatedStates}
             onIDChange={handleIDChange}
             onAlcanceChange={handleAlcanceChange}
             onNext={() => setStep(2)}
@@ -208,10 +215,11 @@ export default function EvaluacionWizardPage() {
 
 // ── STEP 1: Importancia de Factores ──────────────────────────
 function Step1ImportanciaFactores({
-  factores, factorStates, onIDChange, onAlcanceChange, onNext,
+  factores, factorStates, factorEvaluatedStates, onIDChange, onAlcanceChange, onNext,
 }: {
   factores: EvaluacionFactor[]
   factorStates: Record<number, { id: number; alcance?: string }>
+  factorEvaluatedStates: Record<number, boolean>
   onIDChange: (id: number, val: number) => void
   onAlcanceChange: (id: number, alcance: string) => void
   onNext: () => void
@@ -223,7 +231,13 @@ function Step1ImportanciaFactores({
     return acc
   }, {} as Record<string, EvaluacionFactor[]>)
 
-  const allSet = factores.every((ef) => factorStates[ef.factor_id]?.id > 0)
+  const allSet = factores.every((ef) => {
+    const state = factorStates[ef.factor_id]
+    const isEvaluated = factorEvaluatedStates[ef.factor_id] === true
+    if (!isEvaluated || !state?.id) return false
+    if (ef.factor.tipo_impacto === 'Ambos' && !state.alcance) return false
+    return true
+  })
 
   return (
     <div className="page-wrapper">
@@ -393,6 +407,7 @@ function Step2PonderacionSubfactores({
   }
 
   const completedCount = relevantFactores.filter(isComplete).length
+  const canAdvance = relevantFactores.length === 0 || relevantFactores.every(isComplete)
   const selectedEF = selectedFactor !== null
     ? relevantFactores.find((ef) => ef.factor_id === selectedFactor) || null
     : null
@@ -475,7 +490,8 @@ function Step2PonderacionSubfactores({
             onClick={onNext}
             className="btn btn-primary btn-sm"
             style={{ width: '100%' }}
-            disabled={completedCount === 0}
+            disabled={!canAdvance}
+            title={canAdvance ? 'Ver resultados' : 'Debes evaluar todos los subfactores de los factores relevantes antes de continuar'}
           >
             Ver Resultados →
           </button>

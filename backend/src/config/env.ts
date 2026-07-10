@@ -10,5 +10,5 @@ export const config = {
   aiApiKey: process.env.AI_API_KEY || '',
   aiModel: process.env.AI_MODEL || 'claude-sonnet-4-6',
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
-  databaseUrl: process.env.DATABASE_URL || 'file:./dev.db',
+  databaseUrl: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/guios_pro_v2?schema=public',
 }

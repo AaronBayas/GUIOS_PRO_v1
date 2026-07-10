@@ -4,12 +4,23 @@
 export const LEVELS = ['Irrelevante', 'Opcional', 'Importante', 'Fundamental'] as const
 export type NivelImportancia = typeof LEVELS[number]
 
+const IR_MATRIX: NivelImportancia[][] = [
+  ['Irrelevante', 'Irrelevante', 'Opcional', 'Opcional'],
+  ['Irrelevante', 'Opcional', 'Opcional', 'Importante'],
+  ['Opcional', 'Opcional', 'Importante', 'Importante'],
+  ['Opcional', 'Importante', 'Importante', 'Fundamental'],
+]
+
 export function calcularIR(is: number, id: number): NivelImportancia {
-  const isIdx = is - 1
-  const idIdx = id - 1
-  const irScore = (isIdx * 0.60) + (idIdx * 0.40)
-  const irIdx = Math.round(irScore)
-  return LEVELS[Math.min(irIdx, 3)]
+  if (!Number.isInteger(is) || !Number.isInteger(id)) {
+    throw new Error('IS e ID deben ser enteros')
+  }
+
+  if (is < 1 || is > 4 || id < 1 || id > 4) {
+    throw new Error('IS e ID deben estar en el rango 1..4')
+  }
+
+  return IR_MATRIX[id - 1][is - 1]
 }
 
 export function esRelevante(ir: NivelImportancia): boolean {
@@ -24,9 +35,9 @@ export function calcularPM(subfactores: { peso: number; es_critico: boolean }[])
 }
 
 export const UMBRALES: Record<string, number> = {
-  'Tecnológica': 2.8,
+  'Tecnológica': 3.0,
   'Organizacional': 3.0,
-  'Económica': 3.2,
+  'Económica': 3.0,
 }
 
 export function getUmbral(dimensionName: string): number {
