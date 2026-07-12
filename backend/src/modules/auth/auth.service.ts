@@ -50,8 +50,8 @@ export async function registerHandler(req: FastifyRequest, reply: FastifyReply) 
 
   reply.setCookie('token', token, {
     httpOnly: true,
-    secure: false,
-    sameSite: 'lax',
+    secure: true,
+    sameSite: 'none',
     path: '/',
     maxAge: 60 * 60 * 8,
   })
@@ -94,8 +94,8 @@ export async function loginHandler(req: FastifyRequest, reply: FastifyReply) {
 
   reply.setCookie('token', token, {
     httpOnly: true,
-    secure: false,
-    sameSite: 'lax',
+    secure: true,
+    sameSite: 'none',
     path: '/',
     maxAge: 60 * 60 * 8,
   })
