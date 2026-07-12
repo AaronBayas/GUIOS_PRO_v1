@@ -41,7 +41,7 @@ export default function EvaluacionWizardPage() {
       const ss: Record<number, Record<number, number>> = {}
       ev.evaluacion_factores.forEach((ef) => {
         fs[ef.factor_id] = {
-          id: ef.importancia_decisor || ef.factor.importancia_sugerida,
+          id: ef.importancia_decisor !== null ? ef.importancia_decisor : 1,
           alcance: ef.alcance_override || undefined,
         }
         fes[ef.factor_id] = ef.importancia_decisor !== null || ef.alcance_override !== null
@@ -124,11 +124,26 @@ export default function EvaluacionWizardPage() {
     triggerAutosave()
   }
 
-  const handleCalcular = async () => {
+  const handleGoToStep3 = () => {
+    // Step 3 preview uses local React state — no need to save before navigating
+    setStep(3)
+  }
+
+  const handleFinalizar = async () => {
     if (!id) return
     setCalculating(true)
     try {
-      await api.post(`/evaluaciones/${id}/calcular`)
+      // Send all current state to calcular endpoint in one shot
+      const factoresPayload = Object.entries(factorStates).map(([factorId, state]) => ({
+        factor_id: parseInt(factorId),
+        importancia_decisor: state.id,
+        alcance_override: state.alcance,
+        subfactores: Object.entries(subfactorStates[parseInt(factorId)] || {}).map(([sfId, peso]) => ({
+          subfactor_id: parseInt(sfId),
+          peso,
+        })),
+      }))
+      await api.post(`/evaluaciones/${id}/calcular`, { factores: factoresPayload })
       navigate(`/evaluaciones/${id}/resultados`)
     } finally {
       setCalculating(false)
@@ -149,6 +164,12 @@ export default function EvaluacionWizardPage() {
       <p>Evaluación no encontrada</p>
     </div>
   )
+
+  // If evaluation is already Completada, redirect to results view
+  if (evaluacion.estado === 'Completada') {
+    navigate(`/evaluaciones/${evaluacion.evaluacion_id}/resultados`, { replace: true })
+    return null
+  }
 
   const factores = evaluacion.evaluacion_factores
 
@@ -194,7 +215,7 @@ export default function EvaluacionWizardPage() {
             onSelectFactor={setSelectedFactor}
             onSubfactorChange={handleSubfactorChange}
             onBack={() => setStep(1)}
-            onNext={() => setStep(3)}
+            onNext={handleGoToStep3}
           />
         )}
         {step === 3 && (
@@ -204,7 +225,7 @@ export default function EvaluacionWizardPage() {
             factorStates={factorStates}
             subfactorStates={subfactorStates}
             onBack={() => setStep(2)}
-            onCalcular={handleCalcular}
+            onCalcular={handleFinalizar}
             calculating={calculating}
           />
         )}
@@ -774,11 +795,12 @@ function Step3Resultados({
             onClick={onCalcular}
             className="btn btn-primary btn-lg"
             disabled={calculating || evaluated.length === 0}
+            style={{ background: 'linear-gradient(135deg, #0B7A4D, #0e9660)', border: 'none' }}
           >
             {calculating ? (
-              <><div className="spinner spinner-sm" /> Calculando FODA...</>
+              <><div className="spinner spinner-sm" /> Finalizando evaluación...</>
             ) : (
-              '⊕ Calcular FODA y Recomendación'
+              '✓ Finalizar Evaluación'
             )}
           </button>
         </div>

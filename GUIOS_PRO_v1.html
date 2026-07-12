@@ -1,911 +1,1552 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GUIOS PRO v2</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
-<style>
-/* ── RESET & ROOT ─────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GUIOS PRO v2</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ── RESET & ROOT ─────────────────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-:root {
-  --ink:       #0D0F14;
-  --ink2:      #3A3D47;
-  --ink3:      #7A7E8A;
-  --paper:     #F7F6F2;
-  --white:     #FFFFFF;
-  --line:      #E2E0D8;
-  --line2:     #C9C6BC;
+    :root {
+      --ink: #0D0F14;
+      --ink2: #3A3D47;
+      --ink3: #7A7E8A;
+      --paper: #F7F6F2;
+      --white: #FFFFFF;
+      --line: #E2E0D8;
+      --line2: #C9C6BC;
 
-  --accent:    #1A56DB;
-  --accent-l:  #EBF2FF;
-  --accent-d:  #1140A8;
+      --accent: #1A56DB;
+      --accent-l: #EBF2FF;
+      --accent-d: #1140A8;
 
-  --foda-F:    #0B7A4D;  --foda-F-bg: #D6F5E8;
-  --foda-O:    #1A56DB;  --foda-O-bg: #DBEAFE;
-  --foda-D:    #B45309;  --foda-D-bg: #FEF3C7;
-  --foda-A:    #B91C1C;  --foda-A-bg: #FEE2E2;
+      --foda-F: #0B7A4D;
+      --foda-F-bg: #D6F5E8;
+      --foda-O: #1A56DB;
+      --foda-O-bg: #DBEAFE;
+      --foda-D: #B45309;
+      --foda-D-bg: #FEF3C7;
+      --foda-A: #B91C1C;
+      --foda-A-bg: #FEE2E2;
 
-  --rec-A:     #0B7A4D;  --rec-A-bg:  #ECFDF5; --rec-A-bd: #A7F3D0;
-  --rec-B:     #92400E;  --rec-B-bg:  #FFFBEB; --rec-B-bd: #FCD34D;
-  --rec-C:     #991B1B;  --rec-C-bg:  #FFF5F5; --rec-C-bd: #FECACA;
+      --rec-A: #0B7A4D;
+      --rec-A-bg: #ECFDF5;
+      --rec-A-bd: #A7F3D0;
+      --rec-B: #92400E;
+      --rec-B-bg: #FFFBEB;
+      --rec-B-bd: #FCD34D;
+      --rec-C: #991B1B;
+      --rec-C-bg: #FFF5F5;
+      --rec-C-bd: #FECACA;
 
-  --radius:    10px;
-  --radius-lg: 16px;
-  --shadow:    0 1px 3px rgba(0,0,0,.07), 0 4px 16px rgba(0,0,0,.06);
-  --shadow-lg: 0 8px 40px rgba(0,0,0,.12);
+      --radius: 10px;
+      --radius-lg: 16px;
+      --shadow: 0 1px 3px rgba(0, 0, 0, .07), 0 4px 16px rgba(0, 0, 0, .06);
+      --shadow-lg: 0 8px 40px rgba(0, 0, 0, .12);
 
-  --f-display: 'Syne', sans-serif;
-  --f-body:    'DM Sans', sans-serif;
-}
+      --f-display: 'Syne', sans-serif;
+      --f-body: 'DM Sans', sans-serif;
+    }
 
-body {
-  font-family: var(--f-body);
-  background: var(--paper);
-  color: var(--ink);
-  font-size: 14px;
-  line-height: 1.6;
-  min-height: 100vh;
-}
+    body {
+      font-family: var(--f-body);
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
 
-/* ── LAYOUT ───────────────────────────────────────────────── */
-.app { display: flex; flex-direction: column; min-height: 100vh; }
+    /* ── LAYOUT ───────────────────────────────────────────────── */
+    .app {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-/* ── TOPBAR ───────────────────────────────────────────────── */
-.topbar {
-  background: var(--ink);
-  color: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 28px;
-  height: 56px;
-  position: sticky; top: 0; z-index: 100;
-}
-.logo {
-  font-family: var(--f-display);
-  font-size: 18px; font-weight: 800;
-  letter-spacing: -0.5px;
-  display: flex; align-items: center; gap: 8px;
-}
-.logo-dot { width: 8px; height: 8px; border-radius: 50%; background: #4F9BFF; }
-.logo span { color: #4F9BFF; }
-.topbar-center {
-  display: flex; gap: 2px;
-}
-.tab-btn {
-  background: none; border: none;
-  color: rgba(255,255,255,.45);
-  font-family: var(--f-body);
-  font-size: 12px; font-weight: 500;
-  padding: 6px 16px; border-radius: 6px;
-  cursor: pointer;
-  transition: all .18s;
-  display: flex; align-items: center; gap: 6px;
-}
-.tab-btn.active {
-  background: rgba(79,155,255,.18);
-  color: #fff;
-}
-.tab-btn:hover:not(.active) { color: rgba(255,255,255,.75); }
-.tab-num {
-  width: 18px; height: 18px; border-radius: 50%;
-  background: rgba(255,255,255,.12);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; font-weight: 700;
-}
-.tab-btn.active .tab-num { background: #4F9BFF; color: #fff; }
-.tab-btn.done .tab-num { background: #0B7A4D; color: #fff; }
-.tab-btn.done { color: rgba(255,255,255,.6); }
+    /* ── TOPBAR ───────────────────────────────────────────────── */
+    .topbar {
+      background: var(--ink);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-.topbar-right { font-size: 12px; color: rgba(255,255,255,.45); }
-.sw-badge {
-  background: rgba(255,255,255,.1);
-  border: 1px solid rgba(255,255,255,.15);
-  padding: 4px 12px; border-radius: 20px;
-  color: rgba(255,255,255,.7);
-  font-size: 11px;
-}
+    .logo {
+      font-family: var(--f-display);
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-/* ── STEP PROGRESS ───────────────────────────────────────── */
-.step-bar {
-  background: var(--white);
-  border-bottom: 1px solid var(--line);
-  padding: 0 28px;
-  display: flex; align-items: center; gap: 0;
-  height: 48px;
-}
-.step-seg {
-  display: flex; align-items: center; gap: 10px;
-  padding: 0 16px 0 0;
-  font-size: 12px; font-weight: 500; color: var(--ink3);
-  cursor: pointer;
-  transition: color .15s;
-}
-.step-seg.active { color: var(--accent); }
-.step-seg.done { color: var(--foda-F); }
-.step-seg:hover { color: var(--ink2); }
-.step-icon {
-  width: 24px; height: 24px; border-radius: 50%;
-  border: 1.5px solid var(--line2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; font-weight: 700;
-  background: var(--white);
-  transition: all .18s;
-}
-.step-seg.active .step-icon { border-color: var(--accent); background: var(--accent); color: #fff; }
-.step-seg.done .step-icon { border-color: var(--foda-F); background: var(--foda-F); color: #fff; }
-.step-line { flex: 1; height: 1px; background: var(--line); margin: 0 12px; }
-.step-line.done { background: var(--foda-F); }
+    .logo-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4F9BFF;
+    }
 
-/* ── MAIN CONTENT ────────────────────────────────────────── */
-.main { flex: 1; padding: 28px; max-width: 1200px; margin: 0 auto; width: 100%; }
+    .logo span {
+      color: #4F9BFF;
+    }
 
-.page { display: none; }
-.page.active { display: block; animation: fadeUp .25s ease; }
-@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+    .topbar-center {
+      display: flex;
+      gap: 2px;
+    }
 
-/* ── SECTION HEADER ──────────────────────────────────────── */
-.section-head {
-  margin-bottom: 20px;
-}
-.section-title {
-  font-family: var(--f-display);
-  font-size: 22px; font-weight: 700;
-  letter-spacing: -0.5px;
-  color: var(--ink);
-  margin-bottom: 4px;
-}
-.section-sub {
-  font-size: 13px; color: var(--ink3); line-height: 1.5;
-  max-width: 680px;
-}
+    .tab-btn {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, .45);
+      font-family: var(--f-body);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all .18s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-/* ── CARD ────────────────────────────────────────────────── */
-.card {
-  background: var(--white);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-}
+    .tab-btn.active {
+      background: rgba(79, 155, 255, .18);
+      color: #fff;
+    }
 
-/* ── TABLE STEP 1/2 ──────────────────────────────────────── */
-.factors-table-wrap { overflow-x: auto; border-radius: var(--radius-lg); }
-.factors-table { width: 100%; border-collapse: collapse; }
-.factors-table th {
-  background: #F0EFEB;
-  font-family: var(--f-display);
-  font-size: 11px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.8px;
-  color: var(--ink2);
-  padding: 10px 14px;
-  text-align: left;
-  border-bottom: 1px solid var(--line);
-  white-space: nowrap;
-}
-.factors-table td {
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--line);
-  vertical-align: middle;
-}
-.factors-table tr:last-child td { border-bottom: none; }
-.factors-table tr:hover td { background: #FAFAF8; }
+    .tab-btn:hover:not(.active) {
+      color: rgba(255, 255, 255, .75);
+    }
 
-.dim-label {
-  font-size: 10px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.6px;
-  padding: 2px 7px; border-radius: 4px;
-}
-.dim-T { background: #EDE9FE; color: #5B21B6; }
-.dim-O { background: #DBEAFE; color: #1D4ED8; }
-.dim-E { background: #D1FAE5; color: #065F46; }
+    .tab-num {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+    }
 
-.factor-name { font-weight: 500; font-size: 13px; }
+    .tab-btn.active .tab-num {
+      background: #4F9BFF;
+      color: #fff;
+    }
 
-/* IS badge */
-.is-badge {
-  display: inline-flex; align-items: center;
-  font-size: 11px; font-weight: 600;
-  padding: 3px 8px; border-radius: 5px;
-  white-space: nowrap;
-}
-.is-1 { background: #F1F0EC; color: var(--ink3); }
-.is-2 { background: #FEF3C7; color: #92400E; }
-.is-3 { background: #DBEAFE; color: #1D4ED8; }
-.is-4 { background: #D1FAE5; color: #065F46; }
+    .tab-btn.done .tab-num {
+      background: #0B7A4D;
+      color: #fff;
+    }
 
-/* Slider column */
-.slider-wrap { display: flex; flex-direction: column; gap: 4px; min-width: 160px; }
-.custom-slider {
-  -webkit-appearance: none;
-  width: 100%; height: 4px;
-  border-radius: 2px;
-  background: #E2E0D8;
-  outline: none; cursor: pointer;
-}
-.custom-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 16px; height: 16px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: 2px solid var(--white);
-  box-shadow: 0 1px 4px rgba(26,86,219,.35);
-  transition: transform .12s;
-}
-.custom-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
-.slider-labels {
-  display: flex; justify-content: space-between;
-  font-size: 9px; color: var(--ink3); font-weight: 500;
-}
+    .tab-btn.done {
+      color: rgba(255, 255, 255, .6);
+    }
 
-/* IR pill */
-.ir-pill {
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 4px 10px; border-radius: 20px;
-  font-size: 11px; font-weight: 600;
-  white-space: nowrap;
-}
-.ir-Irrelevante { background: #F1F0EC; color: var(--ink3); }
-.ir-Opcional    { background: #FEF3C7; color: #92400E; }
-.ir-Importante  { background: #DBEAFE; color: #1D4ED8; }
-.ir-Fundamental { background: #D1FAE5; color: #065F46; }
+    .topbar-right {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .45);
+    }
 
-/* Scope select */
-.scope-select {
-  -webkit-appearance: none;
-  background: var(--paper);
-  border: 1px solid var(--line2);
-  border-radius: 6px;
-  padding: 5px 24px 5px 9px;
-  font-family: var(--f-body);
-  font-size: 12px; color: var(--ink2);
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237A7E8A'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  outline: none;
-  transition: border-color .15s;
-}
-.scope-select:focus { border-color: var(--accent); }
-.scope-fixed {
-  font-size: 12px; color: var(--ink3); font-weight: 500;
-}
+    .sw-badge {
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .15);
+      padding: 4px 12px;
+      border-radius: 20px;
+      color: rgba(255, 255, 255, .7);
+      font-size: 11px;
+    }
 
-/* Relevance indicator */
-.rel-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  display: inline-block; margin-right: 4px;
-}
+    /* ── STEP PROGRESS ───────────────────────────────────────── */
+    .step-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      height: 48px;
+    }
 
-/* ── STEP 3/4 ─────────────────────────────────────────────── */
-.step34-layout { display: grid; grid-template-columns: 260px 1fr; gap: 16px; }
+    .step-seg {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px 0 0;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink3);
+      cursor: pointer;
+      transition: color .15s;
+    }
 
-.factor-list-panel { display: flex; flex-direction: column; gap: 1px; }
-.factor-list-item {
-  padding: 11px 14px;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: all .15s;
-  display: flex; align-items: center; justify-content: space-between;
-  border: 1px solid transparent;
-}
-.factor-list-item:hover { background: #F0EFEB; }
-.factor-list-item.selected {
-  background: var(--accent-l);
-  border-color: rgba(26,86,219,.2);
-}
-.factor-list-item.saved { opacity: .75; }
-.factor-list-item .fi-name { font-size: 13px; font-weight: 500; }
-.factor-list-item .fi-status {
-  font-size: 10px;
-  display: flex; align-items: center; gap: 4px;
-}
-.check-icon {
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--foda-F); color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 9px;
-}
-.pending-icon {
-  width: 16px; height: 16px; border-radius: 50%;
-  border: 1.5px dashed var(--line2);
-}
+    .step-seg.active {
+      color: var(--accent);
+    }
 
-.subfactors-panel { }
-.panel-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 16px;
-}
-.panel-title { font-family: var(--f-display); font-size: 16px; font-weight: 700; }
-.save-btn {
-  background: var(--accent);
-  color: #fff; border: none;
-  font-family: var(--f-body); font-size: 13px; font-weight: 500;
-  padding: 8px 20px; border-radius: 8px;
-  cursor: pointer;
-  transition: all .15s;
-  display: flex; align-items: center; gap: 6px;
-}
-.save-btn:hover { background: var(--accent-d); transform: translateY(-1px); }
-.save-btn:active { transform: none; }
+    .step-seg.done {
+      color: var(--foda-F);
+    }
 
-.subfactor-row {
-  display: grid;
-  grid-template-columns: 1fr 200px 160px;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--line);
-}
-.subfactor-row:last-child { border-bottom: none; }
-.sf-name { font-size: 13px; color: var(--ink2); line-height: 1.4; }
-.sf-slider-wrap { display: flex; flex-direction: column; gap: 3px; }
-.sf-result {
-  font-size: 11px; font-weight: 600;
-  padding: 3px 10px; border-radius: 5px;
-  text-align: center; white-space: nowrap;
-}
-.sf-1 { background: #FEE2E2; color: #991B1B; }
-.sf-2 { background: #FEF3C7; color: #92400E; }
-.sf-3 { background: #DBEAFE; color: #1D4ED8; }
-.sf-4 { background: #D1FAE5; color: #065F46; }
+    .step-seg:hover {
+      color: var(--ink2);
+    }
 
-/* ── STEP 5/6 ─────────────────────────────────────────────── */
-.results-table { width: 100%; border-collapse: collapse; }
-.results-table th {
-  background: #F0EFEB;
-  font-family: var(--f-display);
-  font-size: 11px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.8px;
-  color: var(--ink2);
-  padding: 10px 14px; text-align: left;
-  border-bottom: 1px solid var(--line);
-}
-.results-table td {
-  padding: 11px 14px;
-  border-bottom: 1px solid var(--line);
-  vertical-align: middle;
-}
-.results-table tr:last-child td { border-bottom: none; }
-.results-table tr:hover td { background: #FAFAF8; }
+    .step-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1.5px solid var(--line2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--white);
+      transition: all .18s;
+    }
 
-.foda-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 4px 10px; border-radius: 6px;
-  font-size: 11px; font-weight: 700;
-}
-.foda-F { background: var(--foda-F-bg); color: var(--foda-F); }
-.foda-O { background: var(--foda-O-bg); color: var(--foda-O); }
-.foda-D { background: var(--foda-D-bg); color: var(--foda-D); }
-.foda-A { background: var(--foda-A-bg); color: var(--foda-A); }
-.foda-empty { background: var(--paper); color: var(--ink3); font-style: italic; }
+    .step-seg.active .step-icon {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
 
-.pm-bar-wrap { display: flex; align-items: center; gap: 8px; min-width: 100px; }
-.pm-bar-track { flex: 1; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
-.pm-bar-fill { height: 100%; border-radius: 3px; transition: width .5s ease; }
-.pm-val { font-size: 12px; font-weight: 600; color: var(--ink2); min-width: 28px; }
+    .step-seg.done .step-icon {
+      border-color: var(--foda-F);
+      background: var(--foda-F);
+      color: #fff;
+    }
 
-/* ── RECOMMENDATION CARD ─────────────────────────────────── */
-.rec-card {
-  margin-top: 20px;
-  border-radius: var(--radius-lg);
-  padding: 24px 28px;
-  display: flex; align-items: flex-start; gap: 24px;
-  border-width: 2px; border-style: solid;
-  animation: fadeUp .3s ease;
-}
-.rec-A-style { background: var(--rec-A-bg); border-color: var(--rec-A-bd); }
-.rec-B-style { background: var(--rec-B-bg); border-color: var(--rec-B-bd); }
-.rec-C-style { background: var(--rec-C-bg); border-color: var(--rec-C-bd); }
+    .step-line {
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+      margin: 0 12px;
+    }
 
-.rec-letter-wrap {
-  width: 72px; height: 72px; border-radius: var(--radius-lg);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.rec-A-style .rec-letter-wrap { background: rgba(11,122,77,.12); }
-.rec-B-style .rec-letter-wrap { background: rgba(180,83,9,.12); }
-.rec-C-style .rec-letter-wrap { background: rgba(185,28,28,.1); }
+    .step-line.done {
+      background: var(--foda-F);
+    }
 
-.rec-letter {
-  font-family: var(--f-display);
-  font-size: 42px; font-weight: 800; line-height: 1;
-}
-.rec-A-style .rec-letter { color: var(--rec-A); }
-.rec-B-style .rec-letter { color: var(--rec-B); }
-.rec-C-style .rec-letter { color: var(--rec-C); }
+    /* ── MAIN CONTENT ────────────────────────────────────────── */
+    .main {
+      flex: 1;
+      padding: 28px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
 
-.rec-content { flex: 1; }
-.rec-title {
-  font-family: var(--f-display);
-  font-size: 17px; font-weight: 700; margin-bottom: 6px;
-}
-.rec-A-style .rec-title { color: var(--rec-A); }
-.rec-B-style .rec-title { color: var(--rec-B); }
-.rec-C-style .rec-title { color: var(--rec-C); }
+    .page {
+      display: none;
+    }
 
-.rec-desc { font-size: 13px; line-height: 1.6; max-width: 640px; }
-.rec-A-style .rec-desc { color: #047857; }
-.rec-B-style .rec-desc { color: #92400E; }
-.rec-C-style .rec-desc { color: #991B1B; }
+    .page.active {
+      display: block;
+      animation: fadeUp .25s ease;
+    }
 
-.rec-counters {
-  display: flex; gap: 20px; margin-top: 14px;
-  padding-top: 14px; border-top: 1px solid rgba(0,0,0,.07);
-}
-.rec-count { text-align: center; }
-.rec-count-num {
-  font-family: var(--f-display);
-  font-size: 24px; font-weight: 800; display: block;
-}
-.rec-count-lbl { font-size: 11px; font-weight: 500; opacity: .75; }
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
 
-/* ── CHARTS ──────────────────────────────────────────────── */
-.charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-.chart-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 20px; }
-.chart-title { font-family: var(--f-display); font-size: 13px; font-weight: 700; color: var(--ink2); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.6px; }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
 
-/* Donut */
-.donut-row { display: flex; align-items: center; gap: 20px; }
-.donut-legend { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-.legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
-.legend-sq { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
-.legend-count { font-weight: 700; margin-left: auto; font-size: 14px; }
+    /* ── SECTION HEADER ──────────────────────────────────────── */
+    .section-head {
+      margin-bottom: 20px;
+    }
 
-/* Bars chart */
-.bar-chart-list { display: flex; flex-direction: column; gap: 7px; max-height: 280px; overflow-y: auto; }
-.bar-item { display: flex; align-items: center; gap: 8px; }
-.bar-name { font-size: 11px; color: var(--ink2); width: 130px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.bar-track { flex: 1; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; position: relative; }
-.bar-fill { height: 100%; border-radius: 4px; transition: width .6s cubic-bezier(.25,.8,.25,1); }
-.bar-score-lbl { font-size: 11px; font-weight: 600; color: var(--ink2); width: 26px; text-align: right; }
-.ref-line { position: absolute; left: 75%; top: 0; bottom: 0; width: 1px; background: rgba(11,122,77,.3); }
+    .section-title {
+      font-family: var(--f-display);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
 
-/* ── BUTTONS ─────────────────────────────────────────────── */
-.btn-row { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
-.btn-primary {
-  background: var(--accent); color: #fff;
-  border: none; font-family: var(--f-body);
-  font-size: 14px; font-weight: 500;
-  padding: 10px 26px; border-radius: 8px;
-  cursor: pointer; transition: all .15s;
-  display: flex; align-items: center; gap: 8px;
-}
-.btn-primary:hover { background: var(--accent-d); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26,86,219,.25); }
-.btn-secondary {
-  background: none; color: var(--ink2);
-  border: 1px solid var(--line2); font-family: var(--f-body);
-  font-size: 14px; font-weight: 500;
-  padding: 10px 22px; border-radius: 8px;
-  cursor: pointer; transition: all .15s;
-}
-.btn-secondary:hover { background: #F0EFEB; }
+    .section-sub {
+      font-size: 13px;
+      color: var(--ink3);
+      line-height: 1.5;
+      max-width: 680px;
+    }
 
-/* ── EMPTY STATE ─────────────────────────────────────────── */
-.empty-state {
-  text-align: center; padding: 60px 20px;
-  color: var(--ink3);
-}
-.empty-icon { font-size: 40px; margin-bottom: 12px; opacity: .4; }
-.empty-text { font-size: 13px; }
+    /* ── CARD ────────────────────────────────────────────────── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
 
-/* ── SCROLL ──────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 3px; }
+    /* ── TABLE STEP 1/2 ──────────────────────────────────────── */
+    .factors-table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-lg);
+    }
 
-/* ── TOOLTIP ─────────────────────────────────────────────── */
-[title] { cursor: help; }
+    .factors-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
 
-/* ── VER RECOMENDACIÓN BTN ───────────────────────────────── */
-.ver-rec-btn {
-  background: var(--ink); color: #fff;
-  border: none; font-family: var(--f-body);
-  font-size: 13px; font-weight: 500;
-  padding: 10px 22px; border-radius: 8px;
-  cursor: pointer; transition: all .15s;
-  display: inline-flex; align-items: center; gap: 6px;
-  margin-top: 20px;
-}
-.ver-rec-btn:hover { background: var(--ink2); }
+    .factors-table th {
+      background: #F0EFEB;
+      font-family: var(--f-display);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--ink2);
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
 
-/* notas factor vacio */
-.not-evaluated {
-  font-size: 11px; color: var(--ink3); font-style: italic;
-}
+    .factors-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
 
-/* info toast */
-.info-box {
-  background: var(--accent-l);
-  border: 1px solid rgba(26,86,219,.2);
-  border-radius: var(--radius);
-  padding: 10px 14px;
-  font-size: 12px; color: #1D4ED8;
-  margin-bottom: 16px;
-  display: flex; align-items: flex-start; gap: 8px;
-}
-</style>
+    .factors-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .factors-table tr:hover td {
+      background: #FAFAF8;
+    }
+
+    .dim-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .dim-T {
+      background: #EDE9FE;
+      color: #5B21B6;
+    }
+
+    .dim-O {
+      background: #DBEAFE;
+      color: #1D4ED8;
+    }
+
+    .dim-E {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .factor-name {
+      font-weight: 500;
+      font-size: 13px;
+    }
+
+    /* IS badge */
+    .is-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 5px;
+      white-space: nowrap;
+    }
+
+    .is-1 {
+      background: #F1F0EC;
+      color: var(--ink3);
+    }
+
+    .is-2 {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .is-3 {
+      background: #DBEAFE;
+      color: #1D4ED8;
+    }
+
+    .is-4 {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    /* Slider column */
+    .slider-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 160px;
+    }
+
+    .custom-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: #E2E0D8;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .custom-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--white);
+      box-shadow: 0 1px 4px rgba(26, 86, 219, .35);
+      transition: transform .12s;
+    }
+
+    .custom-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      color: var(--ink3);
+      font-weight: 500;
+    }
+
+    /* IR pill */
+    .ir-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .ir-Irrelevante {
+      background: #F1F0EC;
+      color: var(--ink3);
+    }
+
+    .ir-Opcional {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .ir-Importante {
+      background: #DBEAFE;
+      color: #1D4ED8;
+    }
+
+    .ir-Fundamental {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    /* Scope select */
+    .scope-select {
+      -webkit-appearance: none;
+      background: var(--paper);
+      border: 1px solid var(--line2);
+      border-radius: 6px;
+      padding: 5px 24px 5px 9px;
+      font-family: var(--f-body);
+      font-size: 12px;
+      color: var(--ink2);
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237A7E8A'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .scope-select:focus {
+      border-color: var(--accent);
+    }
+
+    .scope-fixed {
+      font-size: 12px;
+      color: var(--ink3);
+      font-weight: 500;
+    }
+
+    /* Relevance indicator */
+    .rel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 4px;
+    }
+
+    /* ── STEP 3/4 ─────────────────────────────────────────────── */
+    .step34-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 16px;
+    }
+
+    .factor-list-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .factor-list-item {
+      padding: 11px 14px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all .15s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid transparent;
+    }
+
+    .factor-list-item:hover {
+      background: #F0EFEB;
+    }
+
+    .factor-list-item.selected {
+      background: var(--accent-l);
+      border-color: rgba(26, 86, 219, .2);
+    }
+
+    .factor-list-item.saved {
+      opacity: .75;
+    }
+
+    .factor-list-item .fi-name {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .factor-list-item .fi-status {
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .check-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--foda-F);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+    }
+
+    .pending-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1.5px dashed var(--line2);
+    }
+
+    .subfactors-panel {}
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .panel-title {
+      font-family: var(--f-display);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .save-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      font-family: var(--f-body);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .save-btn:hover {
+      background: var(--accent-d);
+      transform: translateY(-1px);
+    }
+
+    .save-btn:active {
+      transform: none;
+    }
+
+    .subfactor-row {
+      display: grid;
+      grid-template-columns: 1fr 200px 160px;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .subfactor-row:last-child {
+      border-bottom: none;
+    }
+
+    .sf-name {
+      font-size: 13px;
+      color: var(--ink2);
+      line-height: 1.4;
+    }
+
+    .sf-slider-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .sf-result {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 5px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .sf-1 {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+
+    .sf-2 {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .sf-3 {
+      background: #DBEAFE;
+      color: #1D4ED8;
+    }
+
+    .sf-4 {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    /* ── STEP 5/6 ─────────────────────────────────────────────── */
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .results-table th {
+      background: #F0EFEB;
+      font-family: var(--f-display);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--ink2);
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .results-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    .results-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .results-table tr:hover td {
+      background: #FAFAF8;
+    }
+
+    .foda-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .foda-F {
+      background: var(--foda-F-bg);
+      color: var(--foda-F);
+    }
+
+    .foda-O {
+      background: var(--foda-O-bg);
+      color: var(--foda-O);
+    }
+
+    .foda-D {
+      background: var(--foda-D-bg);
+      color: var(--foda-D);
+    }
+
+    .foda-A {
+      background: var(--foda-A-bg);
+      color: var(--foda-A);
+    }
+
+    .foda-empty {
+      background: var(--paper);
+      color: var(--ink3);
+      font-style: italic;
+    }
+
+    .pm-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 100px;
+    }
+
+    .pm-bar-track {
+      flex: 1;
+      height: 6px;
+      background: var(--line);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .pm-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width .5s ease;
+    }
+
+    .pm-val {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink2);
+      min-width: 28px;
+    }
+
+    /* ── RECOMMENDATION CARD ─────────────────────────────────── */
+    .rec-card {
+      margin-top: 20px;
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      border-width: 2px;
+      border-style: solid;
+      animation: fadeUp .3s ease;
+    }
+
+    .rec-A-style {
+      background: var(--rec-A-bg);
+      border-color: var(--rec-A-bd);
+    }
+
+    .rec-B-style {
+      background: var(--rec-B-bg);
+      border-color: var(--rec-B-bd);
+    }
+
+    .rec-C-style {
+      background: var(--rec-C-bg);
+      border-color: var(--rec-C-bd);
+    }
+
+    .rec-letter-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .rec-A-style .rec-letter-wrap {
+      background: rgba(11, 122, 77, .12);
+    }
+
+    .rec-B-style .rec-letter-wrap {
+      background: rgba(180, 83, 9, .12);
+    }
+
+    .rec-C-style .rec-letter-wrap {
+      background: rgba(185, 28, 28, .1);
+    }
+
+    .rec-letter {
+      font-family: var(--f-display);
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .rec-A-style .rec-letter {
+      color: var(--rec-A);
+    }
+
+    .rec-B-style .rec-letter {
+      color: var(--rec-B);
+    }
+
+    .rec-C-style .rec-letter {
+      color: var(--rec-C);
+    }
+
+    .rec-content {
+      flex: 1;
+    }
+
+    .rec-title {
+      font-family: var(--f-display);
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .rec-A-style .rec-title {
+      color: var(--rec-A);
+    }
+
+    .rec-B-style .rec-title {
+      color: var(--rec-B);
+    }
+
+    .rec-C-style .rec-title {
+      color: var(--rec-C);
+    }
+
+    .rec-desc {
+      font-size: 13px;
+      line-height: 1.6;
+      max-width: 640px;
+    }
+
+    .rec-A-style .rec-desc {
+      color: #047857;
+    }
+
+    .rec-B-style .rec-desc {
+      color: #92400E;
+    }
+
+    .rec-C-style .rec-desc {
+      color: #991B1B;
+    }
+
+    .rec-counters {
+      display: flex;
+      gap: 20px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(0, 0, 0, .07);
+    }
+
+    .rec-count {
+      text-align: center;
+    }
+
+    .rec-count-num {
+      font-family: var(--f-display);
+      font-size: 24px;
+      font-weight: 800;
+      display: block;
+    }
+
+    .rec-count-lbl {
+      font-size: 11px;
+      font-weight: 500;
+      opacity: .75;
+    }
+
+    /* ── CHARTS ──────────────────────────────────────────────── */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .chart-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+
+    .chart-title {
+      font-family: var(--f-display);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink2);
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    /* Donut */
+    .donut-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .donut-legend {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .legend-sq {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .legend-count {
+      font-weight: 700;
+      margin-left: auto;
+      font-size: 14px;
+    }
+
+    /* Bars chart */
+    .bar-chart-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .bar-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bar-name {
+      font-size: 11px;
+      color: var(--ink2);
+      width: 130px;
+      flex-shrink: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 8px;
+      background: var(--line);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width .6s cubic-bezier(.25, .8, .25, 1);
+    }
+
+    .bar-score-lbl {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink2);
+      width: 26px;
+      text-align: right;
+    }
+
+    .ref-line {
+      position: absolute;
+      left: 75%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(11, 122, 77, .3);
+    }
+
+    /* ── BUTTONS ─────────────────────────────────────────────── */
+    .btn-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      font-family: var(--f-body);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 26px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .15s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-d);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(26, 86, 219, .25);
+    }
+
+    .btn-secondary {
+      background: none;
+      color: var(--ink2);
+      border: 1px solid var(--line2);
+      font-family: var(--f-body);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 22px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .btn-secondary:hover {
+      background: #F0EFEB;
+    }
+
+    /* ── EMPTY STATE ─────────────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--ink3);
+    }
+
+    .empty-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      opacity: .4;
+    }
+
+    .empty-text {
+      font-size: 13px;
+    }
+
+    /* ── SCROLL ──────────────────────────────────────────────── */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--line2);
+      border-radius: 3px;
+    }
+
+    /* ── TOOLTIP ─────────────────────────────────────────────── */
+    [title] {
+      cursor: help;
+    }
+
+    /* ── VER RECOMENDACIÓN BTN ───────────────────────────────── */
+    .ver-rec-btn {
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      font-family: var(--f-body);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 22px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 20px;
+    }
+
+    .ver-rec-btn:hover {
+      background: var(--ink2);
+    }
+
+    /* notas factor vacio */
+    .not-evaluated {
+      font-size: 11px;
+      color: var(--ink3);
+      font-style: italic;
+    }
+
+    /* info toast */
+    .info-box {
+      background: var(--accent-l);
+      border: 1px solid rgba(26, 86, 219, .2);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #1D4ED8;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  </style>
 </head>
+
 <body>
-<div class="app">
+  <div class="app">
 
-<!-- TOP BAR -->
-<header class="topbar">
-  <div class="logo"><div class="logo-dot"></div>GUIOS<span>PRO</span></div>
-  <nav class="topbar-center" id="tabNav">
-    <button class="tab-btn active" data-page="0" onclick="goPage(0)">
-      <span class="tab-num">1</span>Pasos 1 y 2 — Factores relevantes
-    </button>
-    <button class="tab-btn" data-page="1" onclick="goPage(1)">
-      <span class="tab-num">2</span>Pasos 3 y 4 — Factores ponderados
-    </button>
-    <button class="tab-btn" data-page="2" onclick="goPage(2)">
-      <span class="tab-num">3</span>Pasos 5 y 6 — Evaluación y recomendación
-    </button>
-  </nav>
-  <div class="topbar-right"><span class="sw-badge">Evaluación FLOSS</span></div>
-</header>
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="logo">
+        <div class="logo-dot"></div>GUIOS<span>PRO</span>
+      </div>
+      <nav class="topbar-center" id="tabNav">
+        <button class="tab-btn active" data-page="0" onclick="goPage(0)">
+          <span class="tab-num">1</span>Pasos 1 y 2 — Factores relevantes
+        </button>
+        <button class="tab-btn" data-page="1" onclick="goPage(1)">
+          <span class="tab-num">2</span>Pasos 3 y 4 — Factores ponderados
+        </button>
+        <button class="tab-btn" data-page="2" onclick="goPage(2)">
+          <span class="tab-num">3</span>Pasos 5 y 6 — Evaluación y recomendación
+        </button>
+      </nav>
+      <div class="topbar-right"><span class="sw-badge">Evaluación FLOSS</span></div>
+    </header>
 
-<!-- STEP PROGRESS -->
-<div class="step-bar">
-  <div class="step-seg active" id="seg0" onclick="goPage(0)">
-    <div class="step-icon" id="sicon0">1</div>
-    Importancia de factores
-  </div>
-  <div class="step-line" id="sline0"></div>
-  <div class="step-seg" id="seg1" onclick="goPage(1)">
-    <div class="step-icon" id="sicon1">2</div>
-    Evaluación de subfactores
-  </div>
-  <div class="step-line" id="sline1"></div>
-  <div class="step-seg" id="seg2" onclick="goPage(2)">
-    <div class="step-icon" id="sicon2">3</div>
-    Resultados FODA
-  </div>
-</div>
+    <!-- STEP PROGRESS -->
+    <div class="step-bar">
+      <div class="step-seg active" id="seg0" onclick="goPage(0)">
+        <div class="step-icon" id="sicon0">1</div>
+        Importancia de factores
+      </div>
+      <div class="step-line" id="sline0"></div>
+      <div class="step-seg" id="seg1" onclick="goPage(1)">
+        <div class="step-icon" id="sicon1">2</div>
+        Evaluación de subfactores
+      </div>
+      <div class="step-line" id="sline1"></div>
+      <div class="step-seg" id="seg2" onclick="goPage(2)">
+        <div class="step-icon" id="sicon2">3</div>
+        Resultados FODA
+      </div>
+    </div>
 
-<!-- MAIN -->
-<main class="main">
+    <!-- MAIN -->
+    <main class="main">
 
-<!-- ═══════════════════════════════════════════════════════════
+      <!-- ═══════════════════════════════════════════════════════════
      PÁGINA 1 — PASOS 1 Y 2: FACTORES RELEVANTES
 ════════════════════════════════════════════════════════════ -->
-<div class="page active" id="page0">
-  <div class="section-head">
-    <div class="section-title">Pasos 1 y 2 — Obtención de factores relevantes</div>
-    <div class="section-sub">Evalúe la importancia que tienen los factores para su organización. La importancia relativa (IR) se calcula automáticamente combinando la importancia sugerida (IS) con la importancia del decisor (ID). Los factores con IR = Irrelevante quedarán excluidos del análisis.</div>
-  </div>
+      <div class="page active" id="page0">
+        <div class="section-head">
+          <div class="section-title">Pasos 1 y 2 — Obtención de factores relevantes</div>
+          <div class="section-sub">Evalúe la importancia que tienen los factores para su organización. La importancia
+            relativa (IR) se calcula automáticamente combinando la importancia sugerida (IS) con la importancia del
+            decisor (ID). Los factores con IR = Irrelevante quedarán excluidos del análisis.</div>
+        </div>
 
-  <div class="card factors-table-wrap">
-    <table class="factors-table" id="factorsTable">
-      <thead>
-        <tr>
-          <th>Factor</th>
-          <th>Dimensión</th>
-          <th>Imp. Sugerida (IS)</th>
-          <th style="min-width:200px">Evaluación — Imp. Decisor (ID)</th>
-          <th>Imp. Decisor</th>
-          <th>Imp. Relativa (IR)</th>
-          <th>Alcance</th>
-        </tr>
-      </thead>
-      <tbody id="factorsBody"></tbody>
-    </table>
-  </div>
+        <div class="card factors-table-wrap">
+          <table class="factors-table" id="factorsTable">
+            <thead>
+              <tr>
+                <th>Factor</th>
+                <th>Dimensión</th>
+                <th>Imp. Sugerida (IS)</th>
+                <th style="min-width:200px">Evaluación — Imp. Decisor (ID)</th>
+                <th>Imp. Decisor</th>
+                <th>Imp. Relativa (IR)</th>
+                <th>Alcance</th>
+              </tr>
+            </thead>
+            <tbody id="factorsBody"></tbody>
+          </table>
+        </div>
 
-  <div class="btn-row">
-    <button class="btn-primary" onclick="goPage(1)">
-      Continuar a subfactores <span>→</span>
-    </button>
-  </div>
-</div>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="goPage(1)">
+            Continuar a subfactores <span>→</span>
+          </button>
+        </div>
+      </div>
 
-<!-- ═══════════════════════════════════════════════════════════
+      <!-- ═══════════════════════════════════════════════════════════
      PÁGINA 2 — PASOS 3 Y 4: SUBFACTORES
 ════════════════════════════════════════════════════════════ -->
-<div class="page" id="page1">
-  <div class="section-head">
-    <div class="section-title">Pasos 3 y 4 — Obtención de factores ponderados</div>
-    <div class="section-sub">Para cada factor relevante, evalúe el grado de cumplimiento de sus subfactores. La ponderación media (PM) se calculará automáticamente. Seleccione un factor de la lista y guarde al terminar.</div>
-  </div>
+      <div class="page" id="page1">
+        <div class="section-head">
+          <div class="section-title">Pasos 3 y 4 — Obtención de factores ponderados</div>
+          <div class="section-sub">Para cada factor relevante, evalúe el grado de cumplimiento de sus subfactores. La
+            ponderación media (PM) se calculará automáticamente. Seleccione un factor de la lista y guarde al terminar.
+          </div>
+        </div>
 
-  <div class="step34-layout">
-    <!-- Panel izquierdo: lista de factores -->
-    <div>
-      <div class="card" style="padding:12px;">
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--ink3);padding:2px 4px 10px;">Factores relevantes</div>
-        <div class="factor-list-panel" id="factorListPanel"></div>
+        <div class="step34-layout">
+          <!-- Panel izquierdo: lista de factores -->
+          <div>
+            <div class="card" style="padding:12px;">
+              <div
+                style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--ink3);padding:2px 4px 10px;">
+                Factores relevantes</div>
+              <div class="factor-list-panel" id="factorListPanel"></div>
+            </div>
+          </div>
+
+          <!-- Panel derecho: subfactores del factor seleccionado -->
+          <div class="card" style="padding:20px;" id="subfactorsCard">
+            <div class="empty-state">
+              <div class="empty-icon">↑</div>
+              <div class="empty-text">Seleccione un factor de la lista para evaluar sus subfactores</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-secondary" onclick="goPage(0)">← Volver</button>
+          <button class="btn-primary" onclick="goPage(2)">Continuar a resultados <span>→</span></button>
+        </div>
       </div>
-    </div>
 
-    <!-- Panel derecho: subfactores del factor seleccionado -->
-    <div class="card" style="padding:20px;" id="subfactorsCard">
-      <div class="empty-state">
-        <div class="empty-icon">↑</div>
-        <div class="empty-text">Seleccione un factor de la lista para evaluar sus subfactores</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="btn-row">
-    <button class="btn-secondary" onclick="goPage(0)">← Volver</button>
-    <button class="btn-primary" onclick="goPage(2)">Continuar a resultados <span>→</span></button>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════
+      <!-- ═══════════════════════════════════════════════════════════
      PÁGINA 3 — PASOS 5 Y 6: FODA Y RECOMENDACIÓN
 ════════════════════════════════════════════════════════════ -->
-<div class="page" id="page2">
-  <div class="section-head">
-    <div class="section-title">Pasos 5 y 6 — Evaluación y recomendación sobre la adopción</div>
-    <div class="section-sub">Clasificación FODA de cada factor según su ponderación media y alcance. Los factores sin valores no fueron considerados relevantes o no tienen subfactores evaluados.</div>
-  </div>
+      <div class="page" id="page2">
+        <div class="section-head">
+          <div class="section-title">Pasos 5 y 6 — Evaluación y recomendación sobre la adopción</div>
+          <div class="section-sub">Clasificación FODA de cada factor según su ponderación media y alcance. Los factores
+            sin valores no fueron considerados relevantes o no tienen subfactores evaluados.</div>
+        </div>
 
-  <!-- Gráficas -->
-  <div class="charts-row" id="chartsRow">
-    <div class="chart-card">
-      <div class="chart-title">Distribución FODA</div>
-      <div class="donut-row">
-        <svg id="donutSvg" width="110" height="110" viewBox="0 0 110 110"></svg>
-        <div class="donut-legend" id="donutLegend"></div>
+        <!-- Gráficas -->
+        <div class="charts-row" id="chartsRow">
+          <div class="chart-card">
+            <div class="chart-title">Distribución FODA</div>
+            <div class="donut-row">
+              <svg id="donutSvg" width="110" height="110" viewBox="0 0 110 110"></svg>
+              <div class="donut-legend" id="donutLegend"></div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Ponderación media por factor</div>
+            <div class="bar-chart-list" id="barChartList"></div>
+          </div>
+        </div>
+
+        <!-- Tabla resultados -->
+        <div class="card" style="overflow:hidden;">
+          <table class="results-table" id="resultsTable">
+            <thead>
+              <tr>
+                <th>Factor</th>
+                <th>Dimensión</th>
+                <th>Importancia relativa</th>
+                <th style="min-width:150px">Pond. media del factor</th>
+                <th>Alcance</th>
+                <th>FODA</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Botón Ver Recomendación -->
+        <div style="text-align:center;">
+          <button class="ver-rec-btn" onclick="showRecommendation()">
+            ▶ Ver recomendación
+          </button>
+        </div>
+
+        <!-- Tarjeta de recomendación -->
+        <div id="recCard" style="display:none;"></div>
+
+        <div class="btn-row">
+          <button class="btn-secondary" onclick="goPage(1)">← Volver</button>
+        </div>
       </div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Ponderación media por factor</div>
-      <div class="bar-chart-list" id="barChartList"></div>
-    </div>
+
+    </main>
   </div>
 
-  <!-- Tabla resultados -->
-  <div class="card" style="overflow:hidden;">
-    <table class="results-table" id="resultsTable">
-      <thead>
-        <tr>
-          <th>Factor</th>
-          <th>Dimensión</th>
-          <th>Importancia relativa</th>
-          <th style="min-width:150px">Pond. media del factor</th>
-          <th>Alcance</th>
-          <th>FODA</th>
-        </tr>
-      </thead>
-      <tbody id="resultsBody"></tbody>
-    </table>
-  </div>
+  <script>
+    /* ═══════════════════════════════════════════════════════════
+       DATOS: 18 factores, 3 dimensiones, importancias sugeridas, alcance
+       Fuente exacta: tesis GUIOS PRO / factors.csv / guiosad_data.csv
+    ════════════════════════════════════════════════════════════ */
+    const LEVELS = ['Irrelevante', 'Opcional', 'Importante', 'Fundamental'];
+    const SUB_LEVELS = ['No cumple el requisito', 'Desconozco si cumple', 'Cumple parcialmente', 'Cumple el requisito'];
 
-  <!-- Botón Ver Recomendación -->
-  <div style="text-align:center;">
-    <button class="ver-rec-btn" onclick="showRecommendation()">
-      ▶ Ver recomendación
-    </button>
-  </div>
+    const FACTORS = [
+      // Dimensión Tecnológica
+      { id: 0, name: 'Compatibilidad', dim: 'Tecnológica', is: 3, scope: 'Externo', fixed: true },
+      { id: 1, name: 'Personalización', dim: 'Tecnológica', is: 3, scope: 'Externo', fixed: true },
+      { id: 2, name: 'Prueba', dim: 'Tecnológica', is: 3, scope: 'Externo', fixed: true },
+      { id: 3, name: 'Fiabilidad', dim: 'Tecnológica', is: 3, scope: 'Externo', fixed: true },
+      { id: 4, name: 'Reusabilidad', dim: 'Tecnológica', is: 2, scope: 'Externo', fixed: true },
+      { id: 5, name: 'Usabilidad', dim: 'Tecnológica', is: 3, scope: 'Externo', fixed: true },
+      { id: 6, name: 'Mantenibilidad', dim: 'Tecnológica', is: 3, scope: 'Externo', fixed: true },
+      { id: 7, name: 'Portabilidad', dim: 'Tecnológica', is: 2, scope: 'Externo', fixed: true },
+      { id: 8, name: 'Documentación', dim: 'Tecnológica', is: 2, scope: 'Externo', fixed: true },
+      // Dimensión Organizacional
+      { id: 9, name: 'Formación', dim: 'Organizacional', is: 3, scope: 'Interno', fixed: true },
+      { id: 10, name: 'Tiempo de adopción', dim: 'Organizacional', is: 2, scope: 'Interno', fixed: true },
+      { id: 11, name: 'Casos de estudio de adopción FLOSS', dim: 'Organizacional', is: 2, scope: 'Externo', fixed: true },
+      { id: 12, name: 'Centralidad de la tecnología de la información', dim: 'Organizacional', is: 2, scope: 'Interno', fixed: true },
+      { id: 13, name: 'Apoyo de la alta dirección', dim: 'Organizacional', is: 2, scope: 'Interno', fixed: true },
+      { id: 14, name: 'Bloqueo de proveedores', dim: 'Organizacional', is: 2, scope: 'Externo', fixed: true },
+      { id: 15, name: 'Soporte', dim: 'Organizacional', is: 3, scope: 'Ambos', fixed: false },
+      { id: 16, name: 'Actitud hacia el cambio', dim: 'Organizacional', is: 2, scope: 'Interno', fixed: true },
+      // Dimensión Económica
+      { id: 17, name: 'Coste total de propiedad', dim: 'Económica', is: 3, scope: 'Interno', fixed: true },
+    ];
 
-  <!-- Tarjeta de recomendación -->
-  <div id="recCard" style="display:none;"></div>
+    const SUBFACTORS = [
+      // Compatibilidad (0)
+      [
+        'Una empresa proporciona una infraestructura de nube lista para usar para este software',
+        'Los programas informáticos pueden exportar formatos propietarios',
+        'El software interactúa y se integra con el software propietario existente',
+        'El software está certificado para operar en su nicho de mercado',
+        'El software es compatible con los casos de uso y las funcionalidades más comunes',
+        'El software es compatible con múltiples componentes de hardware',
+        'El software utiliza formatos estándar',
+        'El software es compatible con varios sistemas operativos diferentes (multiplataforma)',
+      ],
+      // Personalización (1)
+      [
+        'El acceso al código fuente es un incentivo para la organización',
+        'El software se puede ampliar fácilmente para satisfacer las necesidades modificando el código fuente',
+        'Las innovaciones se introducen en el software a un ritmo rápido',
+        'El software es fácil de personalizar sin necesidad de modificar el código fuente',
+        'El software soporta nuevas funciones a través de módulos (el software es modular)',
+        'Hay un repositorio público de extensiones para este software',
+      ],
+      // Prueba (2)
+      ['El software es fácil de desplegar y de probar'],
+      // Fiabilidad (3)
+      [
+        'El software es fiable y estable',
+        'El software tiene un buen historial en cuanto a errores de seguridad (el software es seguro)',
+        'El software es más flexible que la solución propietaria',
+        'El software es más confiable que la solución propietaria',
+        'El programa proporciona una amplia variedad de funciones de control de acceso',
+      ],
+      // Reusabilidad (4)
+      [
+        'La licencia permite extensiones propietarias',
+        'El software se ofrece como una biblioteca / marco de trabajo',
+      ],
+      // Usabilidad (5)
+      [
+        'El software proporciona una interfaz gráfica de usuario (GUI)',
+        'El software es más fácil de usar que la alternativa propietaria',
+        'El software es fácil de aprender',
+        'El usuario está descontento con el software propietario',
+      ],
+      // Mantenibilidad (6)
+      ['El software es mantenido activamente por los desarrolladores'],
+      // Portabilidad (7)
+      [
+        'Una versión de aplicación móvil de este software está disponible',
+        'El software es un sistema de administración de base de datos independiente',
+      ],
+      // Documentación (8)
+      [
+        'El software está bien documentado',
+        'La documentación de desarrollo cubre todas las características',
+        'La documentación está disponible en múltiples formatos',
+        'La documentación es fácil de entender',
+        'La documentación está actualizada',
+        'La documentación está escrita por escritores especializados (no desarrolladores)',
+        'La documentación del software es de alta calidad',
+        'El software viene con documentación de desarrollo',
+        'El software viene con documentación de usuario',
+        'La documentación del usuario cubre todas las características',
+        'Los formatos de datos están bien documentados',
+      ],
+      // Formación (9)
+      [
+        'La adopción de este software permite a los usuarios mejorar las habilidades técnicas de TI',
+        'El personal de la organización puede aprender fácilmente por sí mismo a utilizar este software',
+        'El personal de la organización está capacitado para resolver problemas tecnológicos',
+        'Los planes de entrenamiento de este software están disponibles',
+      ],
+      // Tiempo de adopción (10)
+      [
+        'Los requisitos de instalación y despliegue del software son fáciles de cumplir',
+        'El tiempo requerido para adoptar este software es bajo',
+      ],
+      // Casos de estudio (11)
+      ['Hay informes públicos disponibles en Internet que describen el éxito de la adopción de este software'],
+      // Centralidad TI (12)
+      [
+        'La adopción de este software mejora el entorno de trabajo de los usuarios',
+        'Centralizar la infraestructura de TI ayuda a acelerar la adopción de este software',
+      ],
+      // Apoyo alta dirección (13)
+      ['La alta dirección apoya la adopción exitosa de este software'],
+      // Bloqueo proveedores (14)
+      ['El software reduce las dependencias de los proveedores en su entorno'],
+      // Soporte (15)
+      [
+        'El soporte de la comunidad para este software está disponible',
+        'Soporte de expertos y consultores externos para consultas específicas está disponible',
+        'El soporte comercial de este software está disponible 24/7/365',
+        'Hay desarrolladores en su organización que saben cómo desarrollar este software',
+        'Soporte comercial para la personalización de software está disponible',
+        'Es fácil contratar personal informático en la comunidad que conozca este software',
+      ],
+      // Actitud hacia el cambio (16)
+      [
+        'El personal de la organización muestra poca resistencia al cambio tecnológico',
+        'El personal técnico encargado del despliegue y soporte en la organización respalda la adopción',
+      ],
+      // Coste total de propiedad (17)
+      [
+        'Es poco probable que haya costos ocultos al adoptar este software',
+        'La adopción de este software es menos costosa que la alternativa patentada',
+      ],
+    ];
 
-  <div class="btn-row">
-    <button class="btn-secondary" onclick="goPage(1)">← Volver</button>
-  </div>
-</div>
+    /* ── ESTADO DE LA APLICACIÓN ─────────────────────────────── */
+    // ID: importancia del decisor (1-4) por factor
+    const state = {
+      id: FACTORS.map(() => 1),           // importancia decisor
+      scopeOverride: FACTORS.map(f => f.scope === 'Ambos' ? 'Interno' : f.scope),
+      sfWeights: SUBFACTORS.map(sf => sf.map(() => 1)), // pesos subfactores
+      sfSaved: FACTORS.map(() => false),  // si pasos 3/4 fueron guardados
+      currentFactor: null,
+    };
 
-</main>
-</div>
-
-<script>
-/* ═══════════════════════════════════════════════════════════
-   DATOS: 18 factores, 3 dimensiones, importancias sugeridas, alcance
-   Fuente exacta: tesis GUIOS PRO / factors.csv / guiosad_data.csv
-════════════════════════════════════════════════════════════ */
-const LEVELS = ['Irrelevante','Opcional','Importante','Fundamental'];
-const SUB_LEVELS = ['No cumple el requisito','Desconozco si cumple','Cumple parcialmente','Cumple el requisito'];
-
-const FACTORS = [
-  // Dimensión Tecnológica
-  { id:0,  name:'Compatibilidad',                           dim:'Tecnológica', is:3, scope:'Externo', fixed:true },
-  { id:1,  name:'Personalización',                          dim:'Tecnológica', is:3, scope:'Externo', fixed:true },
-  { id:2,  name:'Prueba',                                   dim:'Tecnológica', is:3, scope:'Externo', fixed:true },
-  { id:3,  name:'Fiabilidad',                               dim:'Tecnológica', is:3, scope:'Externo', fixed:true },
-  { id:4,  name:'Reusabilidad',                             dim:'Tecnológica', is:2, scope:'Externo', fixed:true },
-  { id:5,  name:'Usabilidad',                               dim:'Tecnológica', is:3, scope:'Externo', fixed:true },
-  { id:6,  name:'Mantenibilidad',                           dim:'Tecnológica', is:3, scope:'Externo', fixed:true },
-  { id:7,  name:'Portabilidad',                             dim:'Tecnológica', is:2, scope:'Externo', fixed:true },
-  { id:8,  name:'Documentación',                            dim:'Tecnológica', is:2, scope:'Externo', fixed:true },
-  // Dimensión Organizacional
-  { id:9,  name:'Formación',                                dim:'Organizacional', is:3, scope:'Interno', fixed:true },
-  { id:10, name:'Tiempo de adopción',                       dim:'Organizacional', is:2, scope:'Interno', fixed:true },
-  { id:11, name:'Casos de estudio de adopción FLOSS',       dim:'Organizacional', is:2, scope:'Externo', fixed:true },
-  { id:12, name:'Centralidad de la tecnología de la información', dim:'Organizacional', is:2, scope:'Interno', fixed:true },
-  { id:13, name:'Apoyo de la alta dirección',               dim:'Organizacional', is:2, scope:'Interno', fixed:true },
-  { id:14, name:'Bloqueo de proveedores',                   dim:'Organizacional', is:2, scope:'Externo', fixed:true },
-  { id:15, name:'Soporte',                                  dim:'Organizacional', is:3, scope:'Ambos',   fixed:false },
-  { id:16, name:'Actitud hacia el cambio',                  dim:'Organizacional', is:2, scope:'Interno', fixed:true },
-  // Dimensión Económica
-  { id:17, name:'Coste total de propiedad',                 dim:'Económica',    is:3, scope:'Interno', fixed:true },
-];
-
-const SUBFACTORS = [
-  // Compatibilidad (0)
-  [
-    'Una empresa proporciona una infraestructura de nube lista para usar para este software',
-    'Los programas informáticos pueden exportar formatos propietarios',
-    'El software interactúa y se integra con el software propietario existente',
-    'El software está certificado para operar en su nicho de mercado',
-    'El software es compatible con los casos de uso y las funcionalidades más comunes',
-    'El software es compatible con múltiples componentes de hardware',
-    'El software utiliza formatos estándar',
-    'El software es compatible con varios sistemas operativos diferentes (multiplataforma)',
-  ],
-  // Personalización (1)
-  [
-    'El acceso al código fuente es un incentivo para la organización',
-    'El software se puede ampliar fácilmente para satisfacer las necesidades modificando el código fuente',
-    'Las innovaciones se introducen en el software a un ritmo rápido',
-    'El software es fácil de personalizar sin necesidad de modificar el código fuente',
-    'El software soporta nuevas funciones a través de módulos (el software es modular)',
-    'Hay un repositorio público de extensiones para este software',
-  ],
-  // Prueba (2)
-  ['El software es fácil de desplegar y de probar'],
-  // Fiabilidad (3)
-  [
-    'El software es fiable y estable',
-    'El software tiene un buen historial en cuanto a errores de seguridad (el software es seguro)',
-    'El software es más flexible que la solución propietaria',
-    'El software es más confiable que la solución propietaria',
-    'El programa proporciona una amplia variedad de funciones de control de acceso',
-  ],
-  // Reusabilidad (4)
-  [
-    'La licencia permite extensiones propietarias',
-    'El software se ofrece como una biblioteca / marco de trabajo',
-  ],
-  // Usabilidad (5)
-  [
-    'El software proporciona una interfaz gráfica de usuario (GUI)',
-    'El software es más fácil de usar que la alternativa propietaria',
-    'El software es fácil de aprender',
-    'El usuario está descontento con el software propietario',
-  ],
-  // Mantenibilidad (6)
-  ['El software es mantenido activamente por los desarrolladores'],
-  // Portabilidad (7)
-  [
-    'Una versión de aplicación móvil de este software está disponible',
-    'El software es un sistema de administración de base de datos independiente',
-  ],
-  // Documentación (8)
-  [
-    'El software está bien documentado',
-    'La documentación de desarrollo cubre todas las características',
-    'La documentación está disponible en múltiples formatos',
-    'La documentación es fácil de entender',
-    'La documentación está actualizada',
-    'La documentación está escrita por escritores especializados (no desarrolladores)',
-    'La documentación del software es de alta calidad',
-    'El software viene con documentación de desarrollo',
-    'El software viene con documentación de usuario',
-    'La documentación del usuario cubre todas las características',
-    'Los formatos de datos están bien documentados',
-  ],
-  // Formación (9)
-  [
-    'La adopción de este software permite a los usuarios mejorar las habilidades técnicas de TI',
-    'El personal de la organización puede aprender fácilmente por sí mismo a utilizar este software',
-    'El personal de la organización está capacitado para resolver problemas tecnológicos',
-    'Los planes de entrenamiento de este software están disponibles',
-  ],
-  // Tiempo de adopción (10)
-  [
-    'Los requisitos de instalación y despliegue del software son fáciles de cumplir',
-    'El tiempo requerido para adoptar este software es bajo',
-  ],
-  // Casos de estudio (11)
-  ['Hay informes públicos disponibles en Internet que describen el éxito de la adopción de este software'],
-  // Centralidad TI (12)
-  [
-    'La adopción de este software mejora el entorno de trabajo de los usuarios',
-    'Centralizar la infraestructura de TI ayuda a acelerar la adopción de este software',
-  ],
-  // Apoyo alta dirección (13)
-  ['La alta dirección apoya la adopción exitosa de este software'],
-  // Bloqueo proveedores (14)
-  ['El software reduce las dependencias de los proveedores en su entorno'],
-  // Soporte (15)
-  [
-    'El soporte de la comunidad para este software está disponible',
-    'Soporte de expertos y consultores externos para consultas específicas está disponible',
-    'El soporte comercial de este software está disponible 24/7/365',
-    'Hay desarrolladores en su organización que saben cómo desarrollar este software',
-    'Soporte comercial para la personalización de software está disponible',
-    'Es fácil contratar personal informático en la comunidad que conozca este software',
-  ],
-  // Actitud hacia el cambio (16)
-  [
-    'El personal de la organización muestra poca resistencia al cambio tecnológico',
-    'El personal técnico encargado del despliegue y soporte en la organización respalda la adopción',
-  ],
-  // Coste total de propiedad (17)
-  [
-    'Es poco probable que haya costos ocultos al adoptar este software',
-    'La adopción de este software es menos costosa que la alternativa patentada',
-  ],
-];
-
-/* ── ESTADO DE LA APLICACIÓN ─────────────────────────────── */
-// ID: importancia del decisor (1-4) por factor
-const state = {
-  id: FACTORS.map(() => 1),           // importancia decisor
-  scopeOverride: FACTORS.map(f => f.scope === 'Ambos' ? 'Interno' : f.scope),
-  sfWeights: SUBFACTORS.map(sf => sf.map(() => 1)), // pesos subfactores
-  sfSaved: FACTORS.map(() => false),  // si pasos 3/4 fueron guardados
-  currentFactor: null,
-};
-
-/* ── LÓGICA GUIOSAD (EXACTA, CORREGIDA) ───────────────────── */
-// Función de asignación: promedia IS e ID → IR
-function assignmentFn(is, id) {
-  // is y id son índices 1-4
-  const v1 = is - 1; // 0-3
-  const v2 = id - 1; // 0-3
-  return Math.floor((v1 + v2) / 2) + 1; // devuelve 1-4
-}
-
-function irLabel(is, id) {
-  return LEVELS[assignmentFn(is, id) - 1];
-}
-
-// Un factor es relevante si IR >= 'Opcional' (índice >=1, valor>=2)
-function isRelevant(is, id) {
-  return assignmentFn(is, id) >= 2;
-}
-
-// Ponderación media de subfactores
-function calcPM(fid) {
-  const weights = state.sfWeights[fid];
-  if (!weights.length) return 0;
-  return weights.reduce((a,b) => a+b, 0) / weights.length;
-}
-
-// Clasificación FODA
-function fodaClass(pm, scope) {
-  if (pm === 0) return null;
-  if (scope === 'Interno') return pm >= 3 ? 'F' : 'D';
-  return pm >= 3 ? 'O' : 'A';
-}
-
-// Recomendación A/B/C
-function computeRecommendation(results) {
-  let hasC = false, hasB = false;
-  for (const r of results) {
-    const fc = r.foda;
-    const ir = r.ir;
-    if ((fc === 'D' || fc === 'A') && (ir === 'Importante' || ir === 'Fundamental')) {
-      hasC = true; break;
+    /* ── LÓGICA GUIOSAD (EXACTA, CORREGIDA) ───────────────────── */
+    // Función de asignación: promedia IS e ID → IR
+    function assignmentFn(is, id) {
+      // is y id son índices 1-4
+      const v1 = is - 1; // 0-3
+      const v2 = id - 1; // 0-3
+      return Math.floor((v1 + v2) / 2) + 1; // devuelve 1-4
     }
-    if ((fc === 'D' || fc === 'A') && ir === 'Opcional') hasB = true;
-  }
-  if (hasC) return 'C';
-  if (hasB) return 'B';
-  return 'A';
-}
 
-/* ── RENDER PÁGINA 1 ─────────────────────────────────────── */
-function renderPage1() {
-  const tbody = document.getElementById('factorsBody');
-  tbody.innerHTML = '';
-  FACTORS.forEach((f, i) => {
-    const ir = assignmentFn(f.is, state.id[i]);
-    const irLbl = LEVELS[ir - 1];
-    const relevant = ir >= 2;
-    const dimCode = f.dim === 'Tecnológica' ? 'T' : f.dim === 'Organizacional' ? 'O' : 'E';
+    function irLabel(is, id) {
+      return LEVELS[assignmentFn(is, id) - 1];
+    }
 
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
+    // Un factor es relevante si IR >= 'Opcional' (índice >=1, valor>=2)
+    function isRelevant(is, id) {
+      return assignmentFn(is, id) >= 2;
+    }
+
+    // Ponderación media de subfactores
+    function calcPM(fid) {
+      const weights = state.sfWeights[fid];
+      if (!weights.length) return 0;
+      return weights.reduce((a, b) => a + b, 0) / weights.length;
+    }
+
+    // Clasificación FODA
+    function fodaClass(pm, scope) {
+      if (pm === 0) return null;
+      if (scope === 'Interno') return pm >= 3 ? 'F' : 'D';
+      return pm >= 3 ? 'O' : 'A';
+    }
+
+    // Recomendación A/B/C
+    function computeRecommendation(results) {
+      let hasC = false, hasB = false;
+      for (const r of results) {
+        const fc = r.foda;
+        const ir = r.ir;
+        if ((fc === 'D' || fc === 'A') && (ir === 'Importante' || ir === 'Fundamental')) {
+          hasC = true; break;
+        }
+        if ((fc === 'D' || fc === 'A') && ir === 'Opcional') hasB = true;
+      }
+      if (hasC) return 'C';
+      if (hasB) return 'B';
+      return 'A';
+    }
+
+    /* ── RENDER PÁGINA 1 ─────────────────────────────────────── */
+    function renderPage1() {
+      const tbody = document.getElementById('factorsBody');
+      tbody.innerHTML = '';
+      FACTORS.forEach((f, i) => {
+        const ir = assignmentFn(f.is, state.id[i]);
+        const irLbl = LEVELS[ir - 1];
+        const relevant = ir >= 2;
+        const dimCode = f.dim === 'Tecnológica' ? 'T' : f.dim === 'Organizacional' ? 'O' : 'E';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
       <td><div class="factor-name">${f.name}</div></td>
       <td><span class="dim-label dim-${dimCode}">${f.dim}</span></td>
-      <td><span class="is-badge is-${f.is}">${LEVELS[f.is-1]}</span></td>
+      <td><span class="is-badge is-${f.is}">${LEVELS[f.is - 1]}</span></td>
       <td>
         <div class="slider-wrap">
           <input type="range" class="custom-slider" min="1" max="4" step="1"
@@ -916,81 +1557,81 @@ function renderPage1() {
           </div>
         </div>
       </td>
-      <td id="id-lbl-${i}"><span class="ir-pill ir-${LEVELS[state.id[i]-1]}">${LEVELS[state.id[i]-1]}</span></td>
+      <td id="id-lbl-${i}"><span class="ir-pill ir-${LEVELS[state.id[i] - 1]}">${LEVELS[state.id[i] - 1]}</span></td>
       <td id="ir-cell-${i}"><span class="ir-pill ir-${irLbl}">${irLbl}</span></td>
       <td id="scope-cell-${i}">${renderScope(f, i)}</td>
     `;
-    tbody.appendChild(tr);
-  });
-}
+        tbody.appendChild(tr);
+      });
+    }
 
-function renderScope(f, i) {
-  if (f.fixed) return `<span class="scope-fixed">${f.scope}</span>`;
-  // Factor Soporte: selector
-  return `<select class="scope-select" onchange="onScopeChange(${i}, this.value)">
-    <option value="Interno" ${state.scopeOverride[i]==='Interno'?'selected':''}>Interno</option>
-    <option value="Externo" ${state.scopeOverride[i]==='Externo'?'selected':''}>Externo</option>
+    function renderScope(f, i) {
+      if (f.fixed) return `<span class="scope-fixed">${f.scope}</span>`;
+      // Factor Soporte: selector
+      return `<select class="scope-select" onchange="onScopeChange(${i}, this.value)">
+    <option value="Interno" ${state.scopeOverride[i] === 'Interno' ? 'selected' : ''}>Interno</option>
+    <option value="Externo" ${state.scopeOverride[i] === 'Externo' ? 'selected' : ''}>Externo</option>
   </select>`;
-}
+    }
 
-function onIdChange(fid, val) {
-  state.id[fid] = parseInt(val);
-  const f = FACTORS[fid];
-  const ir = assignmentFn(f.is, state.id[fid]);
-  const irLbl = LEVELS[ir - 1];
-  document.getElementById(`id-lbl-${fid}`).innerHTML = `<span class="ir-pill ir-${LEVELS[state.id[fid]-1]}">${LEVELS[state.id[fid]-1]}</span>`;
-  document.getElementById(`ir-cell-${fid}`).innerHTML = `<span class="ir-pill ir-${irLbl}">${irLbl}</span>`;
-}
+    function onIdChange(fid, val) {
+      state.id[fid] = parseInt(val);
+      const f = FACTORS[fid];
+      const ir = assignmentFn(f.is, state.id[fid]);
+      const irLbl = LEVELS[ir - 1];
+      document.getElementById(`id-lbl-${fid}`).innerHTML = `<span class="ir-pill ir-${LEVELS[state.id[fid] - 1]}">${LEVELS[state.id[fid] - 1]}</span>`;
+      document.getElementById(`ir-cell-${fid}`).innerHTML = `<span class="ir-pill ir-${irLbl}">${irLbl}</span>`;
+    }
 
-function onScopeChange(fid, val) {
-  state.scopeOverride[fid] = val;
-}
+    function onScopeChange(fid, val) {
+      state.scopeOverride[fid] = val;
+    }
 
-/* ── RENDER PÁGINA 2 ─────────────────────────────────────── */
-function renderPage2() {
-  const panel = document.getElementById('factorListPanel');
-  panel.innerHTML = '';
-  const relevantFactors = FACTORS.filter((f,i) => isRelevant(f.is, state.id[i]));
+    /* ── RENDER PÁGINA 2 ─────────────────────────────────────── */
+    function renderPage2() {
+      const panel = document.getElementById('factorListPanel');
+      panel.innerHTML = '';
+      const relevantFactors = FACTORS.filter((f, i) => isRelevant(f.is, state.id[i]));
 
-  if (!relevantFactors.length) {
-    panel.innerHTML = '<div style="padding:20px;text-align:center;color:var(--ink3);font-size:12px;">No hay factores relevantes.<br>Vuelva al paso anterior.</div>';
-    return;
-  }
+      if (!relevantFactors.length) {
+        panel.innerHTML = '<div style="padding:20px;text-align:center;color:var(--ink3);font-size:12px;">No hay factores relevantes.<br>Vuelva al paso anterior.</div>';
+        return;
+      }
 
-  relevantFactors.forEach(f => {
-    const i = f.id;
-    const saved = state.sfSaved[i];
-    const isSelected = state.currentFactor === i;
-    const div = document.createElement('div');
-    div.className = `factor-list-item${isSelected?' selected':''}${saved?' saved':''}`;
-    div.id = `fli-${i}`;
-    div.onclick = () => selectFactor(i);
-    div.innerHTML = `
+      relevantFactors.forEach(f => {
+        const i = f.id;
+        const saved = state.sfSaved[i];
+        const isSelected = state.currentFactor === i;
+        const div = document.createElement('div');
+        div.className = `factor-list-item${isSelected ? ' selected' : ''}${saved ? ' saved' : ''}`;
+        div.id = `fli-${i}`;
+        div.onclick = () => selectFactor(i);
+        div.innerHTML = `
       <span class="fi-name">${f.name}</span>
       <span class="fi-status">
         ${saved
-          ? `<span class="check-icon">✓</span>`
-          : `<span class="pending-icon"></span>`}
+            ? `<span class="check-icon">✓</span>`
+            : `<span class="pending-icon"></span>`}
       </span>`;
-    panel.appendChild(div);
-  });
-}
+        panel.appendChild(div);
+      });
+    }
 
-function selectFactor(fid) {
-  state.currentFactor = fid;
-  // update list highlighting
-  document.querySelectorAll('.factor-list-item').forEach(el => el.classList.remove('selected'));
-  const el = document.getElementById(`fli-${fid}`);
-  if (el) el.classList.add('selected');
+    function selectFactor(fid) {
+      state.currentFactor = fid;
+      // update list highlighting
+      document.querySelectorAll('.factor-list-item').forEach(el => el.classList.remove('selected'));
+      const el = document.getElementById(`fli-${fid}`);
+      if (el) el.classList.add('selected');
 
-  const card = document.getElementById('subfactorsCard');
-  const f = FACTORS[fid];
-  const sfs = SUBFACTORS[fid];
+      const card = document.getElementById('subfactorsCard');
+      const f = FACTORS[fid];
+      const sfs = SUBFACTORS[fid];
 
-  let rows = '';
-  sfs.forEach((sf, si) => {
-    const w = state.sfWeights[fid][si];
-    rows += `
+      let rows = '';
+      sfs.forEach((sf, si) => {
+        const w = state.sfWeights[fid][si];
+        rows += `
       <div class="subfactor-row">
         <div class="sf-name">${sf}</div>
         <div class="sf-slider-wrap">
@@ -1000,11 +1641,11 @@ function selectFactor(fid) {
             <span>No cumple</span><span>Desconozco</span><span>Parcialmente</span><span>Cumple</span>
           </div>
         </div>
-        <span class="sf-result sf-${w}" id="sfr-${fid}-${si}">${SUB_LEVELS[w-1]}</span>
+        <span class="sf-result sf-${w}" id="sfr-${fid}-${si}">${SUB_LEVELS[w - 1]}</span>
       </div>`;
-  });
+      });
 
-  card.innerHTML = `
+      card.innerHTML = `
     <div class="panel-header">
       <div class="panel-title">${f.name}</div>
       <button class="save-btn" onclick="saveFactor(${fid})">💾 Guardar</button>
@@ -1013,57 +1654,57 @@ function selectFactor(fid) {
       ℹ Subfactores: ${sfs.length} — Evalúe el cumplimiento de cada uno en su organización, luego presione Guardar.
     </div>
     ${rows}`;
-}
+    }
 
-function onSfChange(fid, si, val) {
-  state.sfWeights[fid][si] = parseInt(val);
-  const cell = document.getElementById(`sfr-${fid}-${si}`);
-  if (cell) {
-    cell.className = `sf-result sf-${val}`;
-    cell.textContent = SUB_LEVELS[parseInt(val)-1];
-  }
-}
+    function onSfChange(fid, si, val) {
+      state.sfWeights[fid][si] = parseInt(val);
+      const cell = document.getElementById(`sfr-${fid}-${si}`);
+      if (cell) {
+        cell.className = `sf-result sf-${val}`;
+        cell.textContent = SUB_LEVELS[parseInt(val) - 1];
+      }
+    }
 
-function saveFactor(fid) {
-  state.sfSaved[fid] = true;
-  renderPage2();
-  selectFactor(fid); // re-select to keep panel open
-  // find next unsaved relevant factor
-  const relevantFactors = FACTORS.filter((f,i) => isRelevant(f.is, state.id[i]));
-  const idx = relevantFactors.findIndex(f => f.id === fid);
-  const next = relevantFactors[idx + 1];
-  if (next) setTimeout(() => selectFactor(next.id), 300);
-}
+    function saveFactor(fid) {
+      state.sfSaved[fid] = true;
+      renderPage2();
+      selectFactor(fid); // re-select to keep panel open
+      // find next unsaved relevant factor
+      const relevantFactors = FACTORS.filter((f, i) => isRelevant(f.is, state.id[i]));
+      const idx = relevantFactors.findIndex(f => f.id === fid);
+      const next = relevantFactors[idx + 1];
+      if (next) setTimeout(() => selectFactor(next.id), 300);
+    }
 
-/* ── RENDER PÁGINA 3 ─────────────────────────────────────── */
-function renderPage3() {
-  const tbody = document.getElementById('resultsBody');
-  tbody.innerHTML = '';
-  const barList = document.getElementById('barChartList');
-  barList.innerHTML = '';
+    /* ── RENDER PÁGINA 3 ─────────────────────────────────────── */
+    function renderPage3() {
+      const tbody = document.getElementById('resultsBody');
+      tbody.innerHTML = '';
+      const barList = document.getElementById('barChartList');
+      barList.innerHTML = '';
 
-  const counts = { F:0, O:0, D:0, A:0 };
+      const counts = { F: 0, O: 0, D: 0, A: 0 };
 
-  FACTORS.forEach((f, i) => {
-    const ir = assignmentFn(f.is, state.id[i]);
-    const irLbl = LEVELS[ir - 1];
-    const relevant = ir >= 2;
-    const pm = relevant && state.sfSaved[i] ? calcPM(i) : null;
-    const scope = state.scopeOverride[i];
-    const fc = pm !== null ? fodaClass(pm, scope) : null;
-    if (fc) counts[fc]++;
+      FACTORS.forEach((f, i) => {
+        const ir = assignmentFn(f.is, state.id[i]);
+        const irLbl = LEVELS[ir - 1];
+        const relevant = ir >= 2;
+        const pm = relevant && state.sfSaved[i] ? calcPM(i) : null;
+        const scope = state.scopeOverride[i];
+        const fc = pm !== null ? fodaClass(pm, scope) : null;
+        if (fc) counts[fc]++;
 
-    const dimCode = f.dim === 'Tecnológica' ? 'T' : f.dim === 'Organizacional' ? 'O' : 'E';
-    const pmDisp = pm !== null ? pm.toFixed(2) : '—';
-    const pmPct = pm !== null ? ((pm/4)*100).toFixed(1) : 0;
-    const pmColor = pm === null ? '#ccc' : pm >= 3 ? '#0B7A4D' : pm >= 2 ? '#B45309' : '#B91C1C';
+        const dimCode = f.dim === 'Tecnológica' ? 'T' : f.dim === 'Organizacional' ? 'O' : 'E';
+        const pmDisp = pm !== null ? pm.toFixed(2) : '—';
+        const pmPct = pm !== null ? ((pm / 4) * 100).toFixed(1) : 0;
+        const pmColor = pm === null ? '#ccc' : pm >= 3 ? '#0B7A4D' : pm >= 2 ? '#B45309' : '#B91C1C';
 
-    const fodaHtml = fc
-      ? `<span class="foda-badge foda-${fc}">${{F:'Fortaleza',O:'Oportunidad',D:'Debilidad',A:'Amenaza'}[fc]}</span>`
-      : `<span class="foda-badge foda-empty">${relevant ? 'Sin evaluar' : 'No relevante'}</span>`;
+        const fodaHtml = fc
+          ? `<span class="foda-badge foda-${fc}">${{ F: 'Fortaleza', O: 'Oportunidad', D: 'Debilidad', A: 'Amenaza' }[fc]}</span>`
+          : `<span class="foda-badge foda-empty">${relevant ? 'Sin evaluar' : 'No relevante'}</span>`;
 
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
       <td><strong style="font-size:13px">${f.name}</strong></td>
       <td><span class="dim-label dim-${dimCode}">${f.dim}</span></td>
       <td><span class="ir-pill ir-${irLbl}">${irLbl}</span></td>
@@ -1078,13 +1719,13 @@ function renderPage3() {
       <td style="font-size:12px;color:var(--ink2)">${scope}</td>
       <td>${fodaHtml}</td>
     `;
-    tbody.appendChild(tr);
+        tbody.appendChild(tr);
 
-    // Bar chart
-    if (relevant && state.sfSaved[i] && pm !== null) {
-      const barColor = pm >= 3 ? '#0B7A4D' : pm >= 2 ? '#B45309' : '#B91C1C';
-      const pct = ((pm/4)*100).toFixed(1);
-      barList.innerHTML += `
+        // Bar chart
+        if (relevant && state.sfSaved[i] && pm !== null) {
+          const barColor = pm >= 3 ? '#0B7A4D' : pm >= 2 ? '#B45309' : '#B91C1C';
+          const pct = ((pm / 4) * 100).toFixed(1);
+          barList.innerHTML += `
         <div class="bar-item">
           <div class="bar-name" title="${f.name}">${f.name}</div>
           <div class="bar-track">
@@ -1093,105 +1734,105 @@ function renderPage3() {
           </div>
           <div class="bar-score-lbl">${pm.toFixed(1)}</div>
         </div>`;
+        }
+      });
+
+      // Donut chart
+      renderDonut(counts);
     }
-  });
 
-  // Donut chart
-  renderDonut(counts);
-}
+    function renderDonut(counts) {
+      const total = counts.F + counts.O + counts.D + counts.A;
+      const svg = document.getElementById('donutSvg');
+      const legend = document.getElementById('donutLegend');
 
-function renderDonut(counts) {
-  const total = counts.F + counts.O + counts.D + counts.A;
-  const svg = document.getElementById('donutSvg');
-  const legend = document.getElementById('donutLegend');
+      const colors = { F: '#0B7A4D', O: '#1A56DB', D: '#B45309', A: '#B91C1C' };
+      const labels = { F: 'Fortaleza', O: 'Oportunidad', D: 'Debilidad', A: 'Amenaza' };
 
-  const colors = { F:'#0B7A4D', O:'#1A56DB', D:'#B45309', A:'#B91C1C' };
-  const labels = { F:'Fortaleza', O:'Oportunidad', D:'Debilidad', A:'Amenaza' };
+      if (total === 0) {
+        svg.innerHTML = `<text x="55" y="60" text-anchor="middle" font-size="11" fill="#7A7E8A">Sin datos</text>`;
+        legend.innerHTML = '';
+        return;
+      }
 
-  if (total === 0) {
-    svg.innerHTML = `<text x="55" y="60" text-anchor="middle" font-size="11" fill="#7A7E8A">Sin datos</text>`;
-    legend.innerHTML = '';
-    return;
-  }
+      const R = 40; const cx = 55; const cy = 55;
+      const circumference = 2 * Math.PI * R;
+      let offset = 0;
+      let svgContent = '';
+      let legendContent = '';
 
-  const R = 40; const cx = 55; const cy = 55;
-  const circumference = 2 * Math.PI * R;
-  let offset = 0;
-  let svgContent = '';
-  let legendContent = '';
-
-  ['F','O','D','A'].forEach(k => {
-    const count = counts[k];
-    const pct = total > 0 ? count / total : 0;
-    const dash = circumference * pct;
-    const gap = circumference - dash;
-    svgContent += `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none"
+      ['F', 'O', 'D', 'A'].forEach(k => {
+        const count = counts[k];
+        const pct = total > 0 ? count / total : 0;
+        const dash = circumference * pct;
+        const gap = circumference - dash;
+        svgContent += `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none"
       stroke="${colors[k]}" stroke-width="18"
       stroke-dasharray="${dash.toFixed(2)} ${gap.toFixed(2)}"
       stroke-dashoffset="${(-offset).toFixed(2)}"
       transform="rotate(-90 ${cx} ${cy})"/>`;
-    offset += dash;
+        offset += dash;
 
-    legendContent += `
+        legendContent += `
       <div class="legend-item">
         <div class="legend-sq" style="background:${colors[k]}"></div>
         <span style="color:var(--ink2)">${labels[k]}</span>
         <span class="legend-count" style="color:${colors[k]}">${count}</span>
       </div>`;
-  });
+      });
 
-  svgContent += `<text x="${cx}" y="${cy-4}" text-anchor="middle" font-family="Syne,sans-serif" font-size="18" font-weight="800" fill="var(--ink)">${total}</text>
-    <text x="${cx}" y="${cy+14}" text-anchor="middle" font-size="9" fill="#7A7E8A">factores</text>`;
+      svgContent += `<text x="${cx}" y="${cy - 4}" text-anchor="middle" font-family="Syne,sans-serif" font-size="18" font-weight="800" fill="var(--ink)">${total}</text>
+    <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="9" fill="#7A7E8A">factores</text>`;
 
-  svg.innerHTML = svgContent;
-  legend.innerHTML = legendContent;
-}
+      svg.innerHTML = svgContent;
+      legend.innerHTML = legendContent;
+    }
 
-function showRecommendation() {
-  const results = [];
-  FACTORS.forEach((f, i) => {
-    const ir = assignmentFn(f.is, state.id[i]);
-    const irLbl = LEVELS[ir - 1];
-    if (ir < 2) return;
-    const pm = state.sfSaved[i] ? calcPM(i) : null;
-    if (pm === null) return;
-    const scope = state.scopeOverride[i];
-    const fc = fodaClass(pm, scope);
-    results.push({ name: f.name, ir: irLbl, foda: fc });
-  });
+    function showRecommendation() {
+      const results = [];
+      FACTORS.forEach((f, i) => {
+        const ir = assignmentFn(f.is, state.id[i]);
+        const irLbl = LEVELS[ir - 1];
+        if (ir < 2) return;
+        const pm = state.sfSaved[i] ? calcPM(i) : null;
+        if (pm === null) return;
+        const scope = state.scopeOverride[i];
+        const fc = fodaClass(pm, scope);
+        results.push({ name: f.name, ir: irLbl, foda: fc });
+      });
 
-  if (results.length === 0) {
-    document.getElementById('recCard').innerHTML = `
+      if (results.length === 0) {
+        document.getElementById('recCard').innerHTML = `
       <div class="info-box" style="margin-top:20px;">
         ℹ No hay factores con subfactores evaluados. Complete los pasos 3 y 4 primero.
       </div>`;
-    document.getElementById('recCard').style.display = 'block';
-    return;
-  }
+        document.getElementById('recCard').style.display = 'block';
+        return;
+      }
 
-  const rec = computeRecommendation(results);
+      const rec = computeRecommendation(results);
 
-  const recTexts = {
-    A: {
-      title: 'Recomendación A — Adoptar el FLOSS seleccionado',
-      desc: 'La organización cumple satisfactoriamente con la mayoría de los requisitos necesarios para adoptar el software seleccionado. Todos los factores han sido identificados como Fortalezas u Oportunidades. En caso de que existan características del software que no cumplan con el requisito mínimo requerido, se sugiere identificar las debilidades/amenazas asociadas a estos subfactores para realizar una segunda evaluación minuciosa.'
-    },
-    B: {
-      title: 'Recomendación B — Es posible adoptar, con matices',
-      desc: 'Se han detectado amenazas y debilidades en características cuya importancia relativa es opcional. Se sugiere realizar una segunda evaluación del software más específica solo con los subfactores que no cumplan con los requisitos necesarios para tener una funcionalidad del software idónea. Estos requisitos pueden estar relacionados con acciones formativas orientadas al personal TIC, contratación de consultores externos, garantizar que la documentación esté disponible en múltiples formatos, entre otros.'
-    },
-    C: {
-      title: 'Recomendación C — Se sugiere posponer la adopción',
-      desc: 'Las amenazas y debilidades son mayores que las oportunidades y fortalezas. Una cantidad considerable de las características de los factores no se cumplen o se desconoce si cumplen con el mínimo requerido. La organización debe de proporcionar los recursos necesarios que garanticen una adopción satisfactoria. Si se trata de factores internos deben de ser aspectos a mejorar dentro de la organización. Si son factores externos, dedicar recursos de ingeniería para mejorar el software.'
-    }
-  };
+      const recTexts = {
+        A: {
+          title: 'Recomendación A — Adoptar el FLOSS seleccionado',
+          desc: 'La organización cumple satisfactoriamente con la mayoría de los requisitos necesarios para adoptar el software seleccionado. Todos los factores han sido identificados como Fortalezas u Oportunidades. En caso de que existan características del software que no cumplan con el requisito mínimo requerido, se sugiere identificar las debilidades/amenazas asociadas a estos subfactores para realizar una segunda evaluación minuciosa.'
+        },
+        B: {
+          title: 'Recomendación B — Es posible adoptar, con matices',
+          desc: 'Se han detectado amenazas y debilidades en características cuya importancia relativa es opcional. Se sugiere realizar una segunda evaluación del software más específica solo con los subfactores que no cumplan con los requisitos necesarios para tener una funcionalidad del software idónea. Estos requisitos pueden estar relacionados con acciones formativas orientadas al personal TIC, contratación de consultores externos, garantizar que la documentación esté disponible en múltiples formatos, entre otros.'
+        },
+        C: {
+          title: 'Recomendación C — Se sugiere posponer la adopción',
+          desc: 'Las amenazas y debilidades son mayores que las oportunidades y fortalezas. Una cantidad considerable de las características de los factores no se cumplen o se desconoce si cumplen con el mínimo requerido. La organización debe de proporcionar los recursos necesarios que garanticen una adopción satisfactoria. Si se trata de factores internos deben de ser aspectos a mejorar dentro de la organización. Si son factores externos, dedicar recursos de ingeniería para mejorar el software.'
+        }
+      };
 
-  const counts = { F:0, O:0, D:0, A:0 };
-  results.forEach(r => { if(r.foda) counts[r.foda]++; });
+      const counts = { F: 0, O: 0, D: 0, A: 0 };
+      results.forEach(r => { if (r.foda) counts[r.foda]++; });
 
-  const recColors = { A:'var(--rec-A)', B:'var(--rec-B)', C:'var(--rec-C)' };
+      const recColors = { A: 'var(--rec-A)', B: 'var(--rec-B)', C: 'var(--rec-C)' };
 
-  document.getElementById('recCard').innerHTML = `
+      document.getElementById('recCard').innerHTML = `
     <div class="rec-card rec-${rec}-style">
       <div class="rec-letter-wrap"><div class="rec-letter">${rec}</div></div>
       <div class="rec-content">
@@ -1217,54 +1858,55 @@ function showRecommendation() {
         </div>
       </div>
     </div>`;
-  document.getElementById('recCard').style.display = 'block';
-  document.getElementById('recCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-/* ── NAVEGACIÓN ──────────────────────────────────────────── */
-function goPage(n) {
-  // hide all
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.step-seg').forEach(s => { s.classList.remove('active'); });
-
-  document.getElementById(`page${n}`).classList.add('active');
-  document.querySelector(`[data-page="${n}"]`).classList.add('active');
-  document.getElementById(`seg${n}`).classList.add('active');
-
-  // update step segments done/active
-  for (let i = 0; i < 3; i++) {
-    const seg = document.getElementById(`seg${i}`);
-    const icon = document.getElementById(`sicon${i}`);
-    const line = document.getElementById(`sline${i}`);
-    if (i < n) {
-      seg.classList.add('done');
-      icon.textContent = '✓';
-      if (line) line.classList.add('done');
-    } else if (i === n) {
-      seg.classList.remove('done');
-      icon.textContent = i + 1;
-      if (line) line.classList.remove('done');
-    } else {
-      seg.classList.remove('done');
-      icon.textContent = i + 1;
-      if (line) line.classList.remove('done');
+      document.getElementById('recCard').style.display = 'block';
+      document.getElementById('recCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }
 
-  // tab done states
-  for (let i = 0; i < n; i++) {
-    document.querySelector(`[data-page="${i}"]`).classList.add('done');
-  }
+    /* ── NAVEGACIÓN ──────────────────────────────────────────── */
+    function goPage(n) {
+      // hide all
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.step-seg').forEach(s => { s.classList.remove('active'); });
 
-  if (n === 1) renderPage2();
-  if (n === 2) renderPage3();
+      document.getElementById(`page${n}`).classList.add('active');
+      document.querySelector(`[data-page="${n}"]`).classList.add('active');
+      document.getElementById(`seg${n}`).classList.add('active');
 
-  window.scrollTo(0,0);
-}
+      // update step segments done/active
+      for (let i = 0; i < 3; i++) {
+        const seg = document.getElementById(`seg${i}`);
+        const icon = document.getElementById(`sicon${i}`);
+        const line = document.getElementById(`sline${i}`);
+        if (i < n) {
+          seg.classList.add('done');
+          icon.textContent = '✓';
+          if (line) line.classList.add('done');
+        } else if (i === n) {
+          seg.classList.remove('done');
+          icon.textContent = i + 1;
+          if (line) line.classList.remove('done');
+        } else {
+          seg.classList.remove('done');
+          icon.textContent = i + 1;
+          if (line) line.classList.remove('done');
+        }
+      }
 
-/* ── INIT ─────────────────────────────────────────────────── */
-renderPage1();
-</script>
+      // tab done states
+      for (let i = 0; i < n; i++) {
+        document.querySelector(`[data-page="${i}"]`).classList.add('done');
+      }
+
+      if (n === 1) renderPage2();
+      if (n === 2) renderPage3();
+
+      window.scrollTo(0, 0);
+    }
+
+    /* ── INIT ─────────────────────────────────────────────────── */
+    renderPage1();
+  </script>
 </body>
+
 </html>

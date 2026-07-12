@@ -17,16 +17,14 @@ export default function EvaluacionesListPage() {
   const [tipo, setTipo] = useState<TipoSoftware | ''>('')
   const [orden, setOrden] = useState<OrdenFilter>('reciente')
   const [deleting, setDeleting] = useState<number | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null)
 
   const fetchEvaluaciones = useCallback(async () => {
     setLoading(true)
     try {
-      const params = new URLSearchParams()
-      if (buscar) params.set('buscar', buscar)
-      if (estado !== 'Todos') params.set('estado', estado)
-      if (tipo) params.set('tipo', tipo)
-      params.set('orden', orden)
-      const res = await api.get(`/evaluaciones?${params}`)
+      const res = await api.get('/evaluaciones', {
+        params: { buscar, estado: estado === 'Todos' ? undefined : estado, tipo, orden },
+      })
       setEvaluaciones(res.data.evaluaciones)
     } finally {
       setLoading(false)
@@ -43,12 +41,17 @@ export default function EvaluacionesListPage() {
     fetchEvaluaciones()
   }
 
-  const handleEliminar = async (id: number) => {
-    if (!confirm('¿Eliminar esta evaluación? Esta acción no se puede deshacer.')) return
-    setDeleting(id)
-    await api.delete(`/evaluaciones/${id}`)
+  const handleEliminarClick = (id: number) => {
+    setDeleteTarget(id)
+  }
+
+  const confirmEliminar = async () => {
+    if (!deleteTarget) return
+    setDeleting(deleteTarget)
+    await api.delete(`/evaluaciones/${deleteTarget}`)
     fetchEvaluaciones()
     setDeleting(null)
+    setDeleteTarget(null)
   }
 
   return (
@@ -196,7 +199,7 @@ export default function EvaluacionesListPage() {
                         </button>
                       )}
                       <button
-                        onClick={() => handleEliminar(ev.evaluacion_id)}
+                        onClick={() => handleEliminarClick(ev.evaluacion_id)}
                         className="btn btn-danger btn-sm"
                         disabled={deleting === ev.evaluacion_id}
                         title="Eliminar"
@@ -211,6 +214,68 @@ export default function EvaluacionesListPage() {
           </tbody>
         </table>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteTarget && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.4)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 9999,
+          backdropFilter: 'blur(4px)'
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '16px',
+            padding: '32px',
+            width: '100%',
+            maxWidth: '380px',
+            textAlign: 'center',
+            boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)',
+            animation: 'fadeIn 0.2s ease-out'
+          }}>
+            <div style={{
+              width: '56px', height: '56px',
+              borderRadius: '50%',
+              background: '#FEE2E2',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              margin: '0 auto 20px',
+              color: '#EF4444'
+            }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <h3 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '8px', color: '#111827' }}>
+              Eliminar evaluación
+            </h3>
+            <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '24px', lineHeight: '1.5' }}>
+              ¿Estás seguro de que deseas eliminar esta evaluación? Esta acción no se puede deshacer.
+            </p>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button 
+                onClick={() => setDeleteTarget(null)}
+                className="btn"
+                style={{ flex: 1, padding: '10px 0', background: '#F3F4F6', color: '#374151', border: 'none', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', fontSize: '14px' }}
+                disabled={deleting !== null}
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={confirmEliminar}
+                className="btn"
+                style={{ flex: 1, padding: '10px 0', background: '#EF4444', color: 'white', border: 'none', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', fontSize: '14px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}
+                disabled={deleting !== null}
+              >
+                {deleting !== null ? <div className="spinner spinner-sm" style={{ borderTopColor: 'white' }} /> : 'Eliminar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }

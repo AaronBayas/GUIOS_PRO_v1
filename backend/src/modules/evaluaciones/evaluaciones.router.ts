@@ -274,13 +274,15 @@ export async function evaluacionesRouter(fastify: FastifyInstance) {
       }
     }
 
-    // Actualizar evaluación principal
+    // Actualizar evaluación principal — solo cambia a En_progreso si aún no está Completada
+    const evActual = await prisma.evaluacion.findUnique({ where: { evaluacion_id: evaluacionId }, select: { estado: true } })
     await prisma.evaluacion.update({
       where: { evaluacion_id: evaluacionId },
       data: {
         ...(body.paso_actual && { paso_actual: body.paso_actual }),
         ultimo_guardado: new Date(),
-        estado: 'En_progreso',
+        // No sobreescribir "Completada" con "En_progreso"
+        ...(evActual?.estado !== 'Completada' && { estado: 'En_progreso' }),
       },
     })
 
@@ -302,6 +304,14 @@ export async function evaluacionesRouter(fastify: FastifyInstance) {
   }, async (req, reply) => {
     const { id } = req.params as { id: string }
     const evaluacionId = parseInt(id)
+    const body = req.body as {
+      factores?: {
+        factor_id: number
+        importancia_decisor?: number
+        alcance_override?: string
+        subfactores?: { subfactor_id: number; peso: number }[]
+      }[]
+    }
 
     const evaluacion = await prisma.evaluacion.findUnique({
       where: { evaluacion_id: evaluacionId },
@@ -317,59 +327,97 @@ export async function evaluacionesRouter(fastify: FastifyInstance) {
 
     if (!evaluacion) return reply.status(404).send({ error: 'Evaluación no encontrada' })
 
-    // Recalcular todo
+    // If frontend sent factor data, apply it to the evaluacion_factores in memory
+    const factorOverrides = new Map<number, { importancia_decisor?: number; alcance_override?: string; subfactorMap: Map<number, number> }>()
+    if (body?.factores) {
+      for (const f of body.factores) {
+        const sfMap = new Map<number, number>()
+        f.subfactores?.forEach(sf => sfMap.set(sf.subfactor_id, sf.peso))
+        factorOverrides.set(f.factor_id, {
+          importancia_decisor: f.importancia_decisor,
+          alcance_override: f.alcance_override,
+          subfactorMap: sfMap,
+        })
+      }
+    }
+
+    // Recalcular todo — using data from DB merged with any overrides from frontend
     const resultados: { ir: string; foda: string }[] = []
+    const updatePromises: Promise<unknown>[] = []
 
     for (const ef of evaluacion.evaluacion_factores) {
-      if (!ef.importancia_decisor) continue
+      const override = factorOverrides.get(ef.factor_id)
+      const importancia_decisor = override?.importancia_decisor ?? ef.importancia_decisor
+      if (!importancia_decisor) continue
 
-      const ir = calcularIR(ef.factor.importancia_sugerida, ef.importancia_decisor)
+      const ir = calcularIR(ef.factor.importancia_sugerida, importancia_decisor)
       if (!esRelevante(ir)) continue
 
-      const subfactoresConPeso = ef.evaluacion_subfactores.filter(sf => sf.peso !== null) as {
-        peso: number; subfactor: { es_critico: boolean }
-      }[]
-
-      if (subfactoresConPeso.length === 0) continue
-
-      const pm = calcularPM(subfactoresConPeso.map(sf => ({
-        peso: sf.peso,
-        es_critico: sf.subfactor.es_critico,
-      })))
-
-      const umbral = getUmbral(ef.factor.dimension.dimension_name)
-      const alcance = (ef.alcance_override || ef.factor.tipo_impacto) as 'Interno' | 'Externo' | 'Ambos'
-
-      let clasif_foda: string
-      if (alcance === 'Ambos') {
-        const result = clasificarFodaAmbos(pm, umbral)
-        clasif_foda = result.final
-        await prisma.evaluacionFactor.update({
-          where: { efactor_id: ef.efactor_id },
-          data: {
-            ponderacion_media: pm,
-            importancia_relativa: ir,
-            clasificacion_foda: result.final,
-            foda_interno: result.interno,
-            foda_externo: result.externo,
-            completado: true,
-          },
-        })
-      } else {
-        clasif_foda = clasificarFoda(pm, alcance, umbral)
-        await prisma.evaluacionFactor.update({
-          where: { efactor_id: ef.efactor_id },
-          data: {
-            ponderacion_media: pm,
-            importancia_relativa: ir,
-            clasificacion_foda: clasif_foda,
-            completado: true,
-          },
+      // Merge subfactor weights: DB data + any overrides from frontend
+      const sfWeights = new Map<number, { peso: number; es_critico: boolean }>()
+      for (const esf of ef.evaluacion_subfactores) {
+        sfWeights.set(esf.subfactor_id, { peso: esf.peso ?? 0, es_critico: esf.subfactor.es_critico })
+      }
+      if (override?.subfactorMap) {
+        override.subfactorMap.forEach((peso, sfId) => {
+          const existing = sfWeights.get(sfId)
+          if (existing) sfWeights.set(sfId, { ...existing, peso })
         })
       }
 
+      const subfactoresConPeso = [...sfWeights.values()].filter(sf => sf.peso > 0)
+      if (subfactoresConPeso.length === 0) continue
+
+      const pm = calcularPM(subfactoresConPeso)
+      const umbral = getUmbral(ef.factor.dimension.dimension_name)
+      const alcance = (override?.alcance_override || ef.alcance_override || ef.factor.tipo_impacto) as 'Interno' | 'Externo' | 'Ambos'
+
+      let clasif_foda: string
+      let foda_interno: string | undefined
+      let foda_externo: string | undefined
+
+      if (alcance === 'Ambos') {
+        const result = clasificarFodaAmbos(pm, umbral)
+        clasif_foda = result.final
+        foda_interno = result.interno
+        foda_externo = result.externo
+      } else {
+        clasif_foda = clasificarFoda(pm, alcance, umbral)
+      }
+
+      // Persist subfactor overrides in parallel
+      if (override?.subfactorMap) {
+        override.subfactorMap.forEach((peso, subfactor_id) => {
+          updatePromises.push(
+            prisma.evaluacionSubfactor.updateMany({
+              where: { efactor_id: ef.efactor_id, subfactor_id },
+              data: { peso },
+            })
+          )
+        })
+      }
+
+      // Update factor result in parallel
+      updatePromises.push(
+        prisma.evaluacionFactor.update({
+          where: { efactor_id: ef.efactor_id },
+          data: {
+            ponderacion_media: pm,
+            importancia_relativa: ir,
+            importancia_decisor,
+            clasificacion_foda: clasif_foda,
+            ...(foda_interno && { foda_interno }),
+            ...(foda_externo && { foda_externo }),
+            completado: true,
+          },
+        })
+      )
+
       resultados.push({ ir, foda: clasif_foda })
     }
+
+    // Execute all DB updates in parallel
+    await Promise.all(updatePromises)
 
     // Calcular risk score y recomendación
     const riskScore = calcularRiskScore(resultados as { ir: string; foda: 'Fortaleza' | 'Oportunidad' | 'Debilidad' | 'Amenaza' }[])
@@ -386,14 +434,14 @@ export async function evaluacionesRouter(fastify: FastifyInstance) {
       },
     })
 
-    // Registrar en historial
-    await prisma.historialCambio.create({
+    // Registrar en historial (no bloquea la respuesta)
+    prisma.historialCambio.create({
       data: {
         evaluacion_id: evaluacionId,
         tipo_cambio: 'paso_completado',
         descripcion: `Evaluación completada. Recomendación: ${recomendacion} | Risk Score: ${riskScore}`,
       },
-    })
+    }).catch(() => {})
 
     return reply.send({
       riskScore,

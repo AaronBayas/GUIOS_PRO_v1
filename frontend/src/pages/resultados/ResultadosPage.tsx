@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom'
 import api from '../../services/api'
 import { Evaluacion, AIRecomendacion, FODA_COLORS, DIMENSION_COLORS } from '../../types'
 import { getImportanciaClass, getRecClass, getFodaClass, UMBRALES } from '../../utils/guiosad.utils'
+import { generatePDF } from '../../utils/pdfGenerator'
+import { FileText } from 'lucide-react'
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, ReferenceLine
@@ -15,6 +17,7 @@ export default function ResultadosPage() {
   const [ai, setAi] = useState<AIRecomendacion | null>(null)
   const [loadingAI, setLoadingAI] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [aiError, setAiError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!id) return
@@ -27,9 +30,13 @@ export default function ResultadosPage() {
   const handleGenerateAI = async () => {
     if (!id) return
     setLoadingAI(true)
+    setAiError(null)
     try {
       const res = await api.post(`/ia/analizar/${id}`)
       setAi(res.data.ai)
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error
+      setAiError(msg || 'Error al generar el análisis. Intenta nuevamente.')
     } finally {
       setLoadingAI(false)
     }
@@ -254,13 +261,30 @@ export default function ResultadosPage() {
         <div className="card-body">
           <div className="flex-between" style={{ marginBottom: '16px' }}>
             <h2 className="section-title" style={{ margin: 0 }}>
-              ✦ Análisis Cualitativo con IA
+              ✦ Resumen Ejecutivo (IA)
             </h2>
-            {!ai && (
-              <button onClick={handleGenerateAI} className="btn btn-primary" disabled={loadingAI}>
-                {loadingAI ? <><div className="spinner spinner-sm" /> Generando...</> : 'Generar análisis'}
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button 
+                onClick={() => generatePDF(evaluacion, ai)} 
+                className="btn btn-secondary"
+                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <FileText size={16} /> Informe
               </button>
-            )}
+              
+              {!ai ? (
+                <button onClick={handleGenerateAI} className="btn btn-primary" disabled={loadingAI}>
+                  {loadingAI ? <><div className="spinner spinner-sm" /> Generando...</> : 'Generar resumen'}
+                </button>
+              ) : (
+                <button onClick={() => {
+                  setLoadingAI(true);
+                  api.post(`/ia/regenerar/${id}`).then(res => setAi(res.data.ai)).finally(() => setLoadingAI(false));
+                }} className="btn btn-primary" style={{ opacity: 0.8 }} disabled={loadingAI}>
+                  {loadingAI ? 'Generando...' : 'Regenerar resumen'}
+                </button>
+              )}
+            </div>
           </div>
 
           {loadingAI && (
@@ -270,29 +294,29 @@ export default function ResultadosPage() {
             </div>
           )}
 
-          {ai && (
-            <div style={{
-              background: 'var(--color-surface-2)',
-              borderRadius: '8px',
-              padding: '20px 24px',
-              fontSize: '14px',
-              lineHeight: 1.8,
-              color: 'var(--color-text-primary)',
-            }}>
+          {aiError && (
+            <div style={{ textAlign: 'center', padding: '20px', color: 'var(--foda-A)', background: 'var(--foda-A-bg)', borderRadius: '8px', marginBottom: '16px' }}>
+              <p><strong>Error:</strong> {aiError}</p>
+            </div>
+          )}
+
+          {ai && !loadingAI && (
+            <div style={{ background: 'var(--color-surface-2)', padding: '24px', borderRadius: '8px', fontSize: '14px', lineHeight: '1.8', color: 'var(--color-text-primary)', textAlign: 'justify' }}>
               <ReactMarkdown
                 components={{
-                  h2: ({ children }) => <h2 style={{ fontSize: '16px', fontWeight: 700, marginTop: '20px', marginBottom: '10px', color: 'var(--color-text-primary)' }}>{children}</h2>,
+                  h2: ({ children }) => <h2 style={{ fontSize: '16px', fontWeight: 700, marginTop: '20px', marginBottom: '10px' }}>{children}</h2>,
                   h3: ({ children }) => <h3 style={{ fontSize: '14px', fontWeight: 700, marginTop: '16px', marginBottom: '8px' }}>{children}</h3>,
                   p: ({ children }) => <p style={{ marginBottom: '12px' }}>{children}</p>,
-                  strong: ({ children }) => <strong style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>{children}</strong>,
+                  strong: ({ children }) => <strong style={{ fontWeight: 600 }}>{children}</strong>,
                   li: ({ children }) => <li style={{ marginBottom: '6px', marginLeft: '16px' }}>{children}</li>,
                   ul: ({ children }) => <ul style={{ marginBottom: '12px' }}>{children}</ul>,
                 }}
               >
-                {ai.respuesta_texto}
+                {ai.respuesta_texto.match(/<RESUMEN>\s*([\s\S]*?)(?:<\/RESUMEN>|<DETALLE>|$)/i)
+                  ? ai.respuesta_texto.match(/<RESUMEN>\s*([\s\S]*?)(?:<\/RESUMEN>|<DETALLE>|$)/i)![1].trim().replace(/^[\s\n]+|[\s\n]+$/g, '')
+                  : ai.respuesta_texto}
               </ReactMarkdown>
-              <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--color-border)',
-                fontSize: '11px', color: 'var(--color-text-muted)' }}>
+              <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--color-border)', fontSize: '11px', color: 'var(--color-text-muted)' }}>
                 Generado por: {ai.modelo_usado} · {new Date(ai.created_at).toLocaleString('es-ES')}
               </div>
             </div>

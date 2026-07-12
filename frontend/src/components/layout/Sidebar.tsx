@@ -36,10 +36,12 @@ export function Sidebar() {
   return (
     <aside className="sidebar">
       {/* Logo */}
-      <div className="sidebar-logo">
-        <div className="sidebar-logo-text">GUIOS PRO</div>
-        <div className="sidebar-logo-sub">v2 · Evaluación FLOSS</div>
-      </div>
+      <NavLink to="/dashboard" style={{ textDecoration: 'none' }}>
+        <div className="sidebar-logo" style={{ cursor: 'pointer' }}>
+          <img src="/logo.png" alt="GUIOS PRO Logo" style={{ width: '120px', height: 'auto', objectFit: 'contain', marginBottom: '8px' }} />
+          <div className="sidebar-logo-sub">Evaluación FLOSS</div>
+        </div>
+      </NavLink>
 
       {/* Navigation */}
       <nav className="sidebar-nav">
