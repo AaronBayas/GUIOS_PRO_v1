@@ -19,8 +19,20 @@ const fastify = Fastify({
 })
 
 // ── PLUGINS ──────────────────────────────────────────────────
+const allowedOrigins = config.frontendUrl
+  .split(',')
+  .map(o => o.trim())
+  .filter(Boolean)
+
 fastify.register(fastifyCors, {
-  origin: config.frontendUrl,
+  origin: (origin, cb) => {
+    // Allow requests with no origin (e.g. Render health checks, curl)
+    if (!origin) return cb(null, true)
+    if (allowedOrigins.some(allowed => origin.startsWith(allowed))) {
+      return cb(null, true)
+    }
+    cb(new Error('Not allowed by CORS'), false)
+  },
   credentials: true,
 })
 
