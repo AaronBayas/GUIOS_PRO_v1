@@ -5,9 +5,9 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "npx prisma generate && tsc",
+    "build": "npm run db:generate && tsc",
     "start": "node dist/server.js",
-    "start:prod": "npx prisma migrate deploy && node dist/server.js",
+    "start:prod": "npm run db:generate && npx prisma migrate deploy && node dist/server.js",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:seed": "node prisma/seed.js",
