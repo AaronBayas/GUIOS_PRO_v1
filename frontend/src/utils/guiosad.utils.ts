@@ -4,6 +4,13 @@
 export const LEVELS = ['Irrelevante', 'Opcional', 'Importante', 'Fundamental'] as const
 export type NivelImportancia = typeof LEVELS[number]
 
+export const IMPORTANCIA_LABELS: Record<number, NivelImportancia> = {
+  1: 'Irrelevante',
+  2: 'Opcional',
+  3: 'Importante',
+  4: 'Fundamental',
+}
+
 const IR_MATRIX: NivelImportancia[][] = [
   ['Irrelevante', 'Irrelevante', 'Opcional', 'Opcional'],
   ['Irrelevante', 'Opcional', 'Opcional', 'Importante'],
