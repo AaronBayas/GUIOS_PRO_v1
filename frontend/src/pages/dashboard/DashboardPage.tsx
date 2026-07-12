@@ -29,7 +29,7 @@ export default function DashboardPage() {
 
       {/* Metrics row */}
       {loading ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '32px' }}>
+        <div className="dashboard-metrics-grid">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="metric-card">
               <div className="skeleton" style={{ height: '12px', width: '60%' }} />
@@ -38,7 +38,7 @@ export default function DashboardPage() {
           ))}
         </div>
       ) : stats ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '32px' }}>
+        <div className="dashboard-metrics-grid">
           <MetricCard label="Total evaluaciones" value={stats.total} sub="en tu cuenta" color="var(--color-accent)" />
           <MetricCard label="Completadas" value={stats.completadas} sub={`${stats.total > 0 ? Math.round((stats.completadas / stats.total) * 100) : 0}% del total`} color="var(--foda-F)" />
           <MetricCard label="En progreso" value={stats.enProgreso} sub="requieren atención" color="var(--foda-D)" />
@@ -47,7 +47,7 @@ export default function DashboardPage() {
       ) : null}
 
       {/* Content grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '20px', alignItems: 'start' }}>
+      <div className="dashboard-content-grid">
         {/* Recent evaluations */}
         <div className="card">
           <div className="card-body">
@@ -138,20 +138,11 @@ function MetricCard({ label, value, sub, color }: { label: string; value: number
 function EvaluacionItem({ ev }: { ev: Evaluacion }) {
   const isCompleted = ev.estado === 'Completada'
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '12px 14px',
-      borderRadius: '8px',
-      background: 'var(--color-surface-2)',
-      border: '1px solid var(--color-border)',
-      transition: 'all var(--transition-fast)',
-    }}>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+    <div className="eval-item">
+      <div className="eval-item-info">
+        <div className="eval-item-header">
           <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text-primary)' }} className="truncate">
-            {ev.software_nombre}
+            {ev.software_nombre || 'Evaluación sin nombre'}
           </span>
           <span className={`badge ${getEstadoClass(ev.estado)}`}>{getEstadoLabel(ev.estado)}</span>
           {ev.recomendacion && (
@@ -159,7 +150,7 @@ function EvaluacionItem({ ev }: { ev: Evaluacion }) {
           )}
         </div>
         <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
-          {ev.software_tipo} · {formatRelativeTime(ev.ultimo_guardado)}
+          {ev.software_tipo || 'Desconocido'} · {formatRelativeTime(ev.ultimo_guardado)}
         </div>
       </div>
       <Link

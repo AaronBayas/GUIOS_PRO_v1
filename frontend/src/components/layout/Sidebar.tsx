@@ -13,7 +13,17 @@ const adminItems = [
   { to: '/admin/usuarios', label: 'Usuarios', icon: '⊙' },
 ]
 
-export function Sidebar() {
+export function Sidebar({ 
+  isOpen, 
+  onClose,
+  isCollapsed,
+  onToggleCollapse
+}: { 
+  isOpen?: boolean, 
+  onClose?: () => void,
+  isCollapsed?: boolean,
+  onToggleCollapse?: () => void
+}) {
   const { usuario, logout } = useAuthStore()
   const navigate = useNavigate()
 
@@ -34,14 +44,36 @@ export function Sidebar() {
     .toUpperCase() || '?'
 
   return (
-    <aside className="sidebar">
-      {/* Logo */}
-      <NavLink to="/dashboard" style={{ textDecoration: 'none' }}>
-        <div className="sidebar-logo" style={{ cursor: 'pointer' }}>
-          <img src="/logo.png" alt="GUIOS PRO Logo" style={{ width: '120px', height: 'auto', objectFit: 'contain', marginBottom: '8px' }} />
-          <div className="sidebar-logo-sub">Evaluación FLOSS</div>
+    <>
+      <div 
+        className={`sidebar-overlay ${isOpen ? 'open' : ''}`} 
+        onClick={onClose} 
+      />
+      <aside className={`sidebar ${isOpen ? 'open' : ''} ${isCollapsed ? 'collapsed' : ''}`}>
+        
+        {/* Toggle Collapse Button (Desktop) */}
+        <button 
+          className="desktop-collapse-btn" 
+          onClick={onToggleCollapse}
+          title={isCollapsed ? "Expandir" : "Contraer"}
+        >
+          {isCollapsed ? '›' : '‹'}
+        </button>
+
+        {/* Logo */}
+        <div className="sidebar-header">
+          <NavLink to="/dashboard" style={{ textDecoration: 'none' }} onClick={onClose}>
+            <div className="sidebar-logo" style={{ cursor: 'pointer' }}>
+              <img src="/logo.png" alt="GUIOS PRO Logo" className="sidebar-logo-img" />
+              {!isCollapsed && <div className="sidebar-logo-sub">Evaluación FLOSS</div>}
+            </div>
+          </NavLink>
+          {isOpen && (
+            <button className="mobile-menu-btn" onClick={onClose} style={{ color: 'white', marginRight: '16px' }}>
+              ✕
+            </button>
+          )}
         </div>
-      </NavLink>
 
       {/* Navigation */}
       <nav className="sidebar-nav">
@@ -61,7 +93,7 @@ export function Sidebar() {
               }
             >
               <span className="sidebar-icon">{item.icon}</span>
-              {item.label}
+              <span className="sidebar-link-text">{item.label}</span>
             </NavLink>
           ))}
         </div>
@@ -76,7 +108,7 @@ export function Sidebar() {
                 className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
               >
                 <span className="sidebar-icon">{item.icon}</span>
-                {item.label}
+                <span className="sidebar-link-text">{item.label}</span>
               </NavLink>
             ))}
           </div>
@@ -87,10 +119,12 @@ export function Sidebar() {
       <div className="sidebar-footer">
         <div className="sidebar-user">
           <div className="sidebar-avatar">{initials}</div>
-          <div>
-            <div className="sidebar-user-name">{usuario?.usuario_name}</div>
-            <div className="sidebar-user-role">{usuario?.rol}</div>
-          </div>
+          {!isCollapsed && (
+            <div>
+              <div className="sidebar-user-name">{usuario?.usuario_name}</div>
+              <div className="sidebar-user-role">{usuario?.rol}</div>
+            </div>
+          )}
         </div>
         <button
           className="sidebar-link"
@@ -98,9 +132,10 @@ export function Sidebar() {
           style={{ width: '100%', color: 'rgba(255,100,100,0.7)' }}
         >
           <span className="sidebar-icon">⎋</span>
-          Cerrar sesión
+          <span className="sidebar-link-text">Cerrar sesión</span>
         </button>
       </div>
     </aside>
+    </>
   )
 }

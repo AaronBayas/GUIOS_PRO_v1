@@ -66,7 +66,7 @@ export default function ResultadosPage() {
   const barData = efactores
     .filter(ef => ef.ponderacion_media !== null)
     .map(ef => ({
-      name: ef.factor.factor_name.length > 25 ? ef.factor.factor_name.slice(0, 25) + '...' : ef.factor.factor_name,
+      name: ef.factor.factor_name.length > 14 ? ef.factor.factor_name.slice(0, 14) + '...' : ef.factor.factor_name,
       pm: ef.ponderacion_media,
       foda: ef.clasificacion_foda,
       umbral: UMBRALES[ef.factor.dimension.dimension_name] ?? 3.0,
@@ -101,15 +101,9 @@ export default function ResultadosPage() {
 
       {/* Recomendación prominente */}
       {rec && recInfo && (
-        <div style={{
+        <div className="rec-banner" style={{
           background: recInfo.bg,
           border: `2px solid ${recInfo.border}`,
-          borderRadius: '12px',
-          padding: '24px 28px',
-          marginBottom: '28px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '24px',
         }}>
           <div style={{
             width: '72px', height: '72px', borderRadius: '50%',
@@ -122,14 +116,16 @@ export default function ResultadosPage() {
             <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: recInfo.color, marginBottom: '4px' }}>
               Recomendación GUIOSAD v2
             </div>
-            <h2 style={{ fontSize: '22px', fontWeight: 800, color: recInfo.color, marginBottom: '6px' }}>
+            <h2 style={{ fontSize: 'clamp(16px, 4.5vw, 22px)', fontWeight: 800, color: recInfo.color, marginBottom: '6px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               Recomendación {rec} — {recInfo.label}
             </h2>
             <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>{recInfo.desc}</p>
           </div>
-          <div style={{ textAlign: 'right', flexShrink: 0 }}>
-            <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginBottom: '4px' }}>Risk Score</div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '36px', fontWeight: 700, color: recInfo.color }}>{riskScore}</div>
+          <div className="rec-banner-right" style={{ flexShrink: 0, textAlign: 'right' }}>
+            <div>
+              <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginBottom: '4px' }}>Risk Score</div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '36px', fontWeight: 700, color: recInfo.color }}>{riskScore}</div>
+            </div>
             <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
               {riskScore === 0 ? 'Sin riesgo' : riskScore <= 4 ? 'Riesgo moderado' : 'Riesgo alto'}
             </div>
@@ -138,7 +134,7 @@ export default function ResultadosPage() {
       )}
 
       {/* Charts row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px', marginBottom: '24px' }}>
+      <div className="charts-grid">
         {/* Donut FODA */}
         <div className="card">
           <div className="card-body">
@@ -152,7 +148,6 @@ export default function ResultadosPage() {
                   ))}
                 </Pie>
                 <Tooltip formatter={(val, name) => [val, name]} />
-                <Legend formatter={(value) => <span style={{ fontSize: '12px' }}>{value}</span>} />
               </PieChart>
             </ResponsiveContainer>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '8px' }}>
@@ -171,11 +166,11 @@ export default function ResultadosPage() {
         <div className="card">
           <div className="card-body">
             <h2 className="section-title">PM por Factor</h2>
-            <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={barData} layout="vertical" margin={{ left: 0, right: 40, top: 0, bottom: 0 }}>
+            <ResponsiveContainer width="100%" height={380}>
+              <BarChart data={barData} layout="vertical" margin={{ left: 0, right: 30, top: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--color-border)" />
                 <XAxis type="number" domain={[0, 4]} tickCount={5} tick={{ fontSize: 11 }} />
-                <YAxis type="category" dataKey="name" width={160} tick={{ fontSize: 10 }} />
+                <YAxis type="category" dataKey="name" width={110} tick={{ fontSize: 10 }} />
                 <Tooltip
                   formatter={(val) => [Number(val).toFixed(2), 'PM']}
                   contentStyle={{ fontSize: '12px', borderRadius: '6px', border: '1px solid var(--color-border)' }}
