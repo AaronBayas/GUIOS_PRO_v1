@@ -420,7 +420,7 @@ export async function evaluacionesRouter(fastify: FastifyInstance) {
     await Promise.all(updatePromises)
 
     // Calcular risk score y recomendación
-    const riskScore = calcularRiskScore(resultados as { ir: string; foda: 'Fortaleza' | 'Oportunidad' | 'Debilidad' | 'Amenaza' }[])
+    const riskScore = calcularRiskScore(resultados as { ir: 'Irrelevante' | 'Opcional' | 'Importante' | 'Fundamental'; foda: 'Fortaleza' | 'Oportunidad' | 'Debilidad' | 'Amenaza' }[])
     const recomendacion = calcularRecomendacion(riskScore)
 
     await prisma.evaluacion.update({
