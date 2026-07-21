@@ -139,9 +139,10 @@ async function callAIWithFallback(evaluacion: EvaluacionForIA): Promise<{ text: 
   if (AI_KEYS.length === 0) return null
 
   const prompt = buildProfessionalPrompt(evaluacion)
-  const aiModel = process.env.AI_MODEL || 'meta/llama-3.1-70b-instruct'
+  const aiModel = process.env.AI_MODEL || 'meta/llama-3.1-8b-instruct'
 
-  for (let attempt = 0; attempt < AI_KEYS.length; attempt++) {
+  const maxAttempts = Math.min(2, AI_KEYS.length)
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const key = getNextKey()
     if (!key) break
 
@@ -165,7 +166,7 @@ async function callAIWithFallback(evaluacion: EvaluacionForIA): Promise<{ text: 
           max_tokens: 1024,
           temperature: 0.3,
         }),
-        signal: AbortSignal.timeout(30000), // 30s timeout
+        signal: AbortSignal.timeout(15000), // 15s timeout
       })
 
       if (!response.ok) {
